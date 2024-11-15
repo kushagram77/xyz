@@ -1,0 +1,14 @@
+
+body{
+    font-family: Arial, Helvetica, Geneva, sans-serif;
+    font-size: 18px;
+    background-color:red;
+    border:2px solid red;
+}
+.error{
+    color: #FF0000;
+}
+.success{
+    color: #0000FF;
+}
+
