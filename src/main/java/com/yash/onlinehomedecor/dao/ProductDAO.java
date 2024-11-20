@@ -1,16 +1,27 @@
 package com.yash.onlinehomedecor.dao;
 
 import com.yash.onlinehomedecor.domain.Product;
+import com.yash.onlinehomedecor.domain.ProductCategories;
+import com.yash.onlinehomedecor.domain.Shops;
+
 import java.util.List;
 
 public interface ProductDAO {
-    void save(Product product);
-    void update(Product product);
-    void delete(Product product);
-    void delete(Integer productId);
-    Product findById(Integer productId);
-    List<Product> findAll();
-    List<Product> findByCategory(Integer categoryId);
-    List<Product> findByShop(Integer shopId);
-    List<Product> findBySeller(Integer sellerId);
+    void saveProduct(Product product);
+    List<Product> getAllProducts();
+    Product getProductById(int id);
+    void updateProduct(Product product);
+    void deleteProduct(int id);
+
+    List<ProductCategories> getAllProductCategories();
+    ProductCategories getProductCategoryById(int id);
+    void saveProductCategory(ProductCategories category);
+    void updateProductCategory(ProductCategories category);
+    void deleteProductCategory(int id);
+
+    List<Shops> getAllShops();
+    Shops getShopById(int id);
+    void saveShop(Shops shop);
+    void updateShop(Shops shop);
+    void deleteShop(int id);
 }

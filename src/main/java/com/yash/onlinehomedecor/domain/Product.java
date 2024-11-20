@@ -1,4 +1,7 @@
 package com.yash.onlinehomedecor.domain;
+
+import javax.persistence.*;
+
 /**
  *
  * @author Kushagra Mishra
@@ -11,14 +14,19 @@ public class Product {
     private Integer category_id;
     private Integer seller_id;
     private Integer shop_id;
+    private boolean available;
 
-    public Integer getShop_id() {
-        return shop_id;
-    }
+//    @Lob
+//    @Column(name = "image", columnDefinition = "MEDIUMBLOB")
+@Column(name = "image")
+@Basic(fetch = FetchType.LAZY)
 
-    public void setShop_id(Integer shop_id) {
-        this.shop_id = shop_id;
-    }
+ // @Transient
+@Lob
+private byte[] image;
+
+
+    // Getters and setters
 
     public Integer getId() {
         return id;
@@ -66,5 +74,29 @@ public class Product {
 
     public void setSeller_id(Integer seller_id) {
         this.seller_id = seller_id;
+    }
+
+    public Integer getShop_id() {
+        return shop_id;
+    }
+
+    public void setShop_id(Integer shop_id) {
+        this.shop_id = shop_id;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

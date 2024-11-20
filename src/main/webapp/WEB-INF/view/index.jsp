@@ -3,347 +3,379 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
+<html data-theme="light">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Online Home Decor</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+            /* [Previous root styles remain the same] */
+            :root[data-theme="light"] {
+                --primary: #7C3AED;
+                --primary-dark: #6D28D9;
+                --bg-primary: #F8F7FF;
+                --bg-secondary: #FFFFFF;
+                --text-primary: #2D3748;
+                --text-secondary: #4A5568;
+                --accent: #F59E0B;
+                --success: #10B981;
+                --error: #EF4444;
+                --border: #E2E8F0;
+                --card-bg: rgba(255, 255, 255, 0.95);
+                --header-bg: linear-gradient(to right, #7C3AED, #6D28D9);
+                --input-bg: #FFFFFF;
+                --shadow: rgba(0, 0, 0, 0.1);
+            }
+
+            :root[data-theme="dark"] {
+                --primary: #9F7AEA;
+                --primary-dark: #805AD5;
+                --bg-primary: #1A202C;
+                --bg-secondary: #2D3748;
+                --text-primary: #F7FAFC;
+                --text-secondary: #E2E8F0;
+                --accent: #F6AD55;
+                --success: #68D391;
+                --error: #FC8181;
+                --border: #4A5568;
+                --card-bg: rgba(45, 55, 72, 0.95);
+                --header-bg: linear-gradient(to right, #6B46C1, #553C9A);
+                --input-bg: #2D3748;
+                --shadow: rgba(0, 0, 0, 0.3);
+            }
 
             * {
                 margin: 0;
                 padding: 0;
                 box-sizing: border-box;
-                font-family: 'Poppins', sans-serif;
+                font-family: 'Inter', sans-serif;
+                transition: background-color 0.3s, color 0.3s, border-color 0.3s;
             }
 
             body {
-                background: linear-gradient(135deg, #00ffff 0%, #00bfff 100%);
+                background: var(--bg-primary);
                 min-height: 100vh;
                 display: flex;
-                flex-direction: column;
                 align-items: center;
+                justify-content: center;
                 padding: 20px;
+                position: relative;
+                color: var(--text-primary);
+            }
+
+            body::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(45deg,
+                    rgba(124, 58, 237, 0.1) 0%,
+                    rgba(159, 122, 234, 0.1) 100%);
+                z-index: 0;
+            }
+
+            .theme-toggle {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--card-bg);
+                border: 1px solid var(--border);
+                border-radius: 50%;
+                width: 45px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 2px 8px var(--shadow);
+                z-index: 1000;
+                transition: transform 0.3s ease;
+            }
+
+            .theme-toggle:hover {
+                transform: scale(1.1);
+            }
+
+            .theme-toggle .material-icons {
+                color: var(--primary);
+                font-size: 24px;
             }
 
             .main-container {
-                background: rgba(255, 255, 255, 0.95);
-                width: 90%;
-                max-width: 1200px;
-                margin: 20px auto;
-                border-radius: 20px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                background: var(--card-bg);
+                width: 100%;
+                max-width: 480px;
+                border-radius: 24px;
+                box-shadow: 0 20px 25px -5px var(--shadow);
                 overflow: hidden;
-                animation: containerFadeIn 0.8s ease-out;
-            }
-
-            @keyframes containerFadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
+                position: relative;
+                backdrop-filter: blur(10px);
+                z-index: 1;
+                border: 1px solid var(--border);
             }
 
             .header {
-                background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-                padding: 25px 40px;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                background: var(--header-bg);
+                padding: 28px;
                 text-align: center;
+                position: relative;
             }
 
             .header h1 {
-                font-size: 32px;
-                color: #2c3e50;
-                font-weight: 600;
-                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-                letter-spacing: 0.5px;
+                color: white;
+                font-size: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                font-family: 'Poppins', sans-serif;
             }
 
             .content {
                 padding: 40px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+                background: var(--card-bg);
             }
 
             .login-container {
-                background: white;
-                padding: 40px;
-                border-radius: 15px;
                 width: 100%;
-                max-width: 450px;
-                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-                animation: loginFadeIn 1s ease-out;
+                max-width: 400px;
+                margin: 0 auto;
             }
 
-            @keyframes loginFadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            .login-container h2 {
-                color: #2c3e50;
-                margin-bottom: 30px;
+            .welcome-back {
+                font-family: 'Poppins', sans-serif;
                 font-size: 28px;
+                font-weight: 700;
+                color: var(--primary);
                 text-align: center;
-                font-weight: 600;
-                position: relative;
-                padding-bottom: 10px;
-            }
-
-            .login-container h2::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 50px;
-                height: 3px;
-                background: linear-gradient(to right, #00ffff, #00bfff);
-                border-radius: 2px;
+                margin-bottom: 30px;
+                background: linear-gradient(120deg, var(--primary) 0%, var(--accent) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                animation: fadeInScale 0.8s ease-out;
             }
 
             .form-group {
-                margin-bottom: 25px;
-                position: relative;
+                margin-bottom: 24px;
             }
 
-            .form-group label {
-                display: block;
+            .label-with-icon {
+                display: flex;
+                align-items: center;
+                gap: 8px;
                 margin-bottom: 8px;
-                color: #34495e;
+                color: var(--text-secondary);
                 font-weight: 500;
-                font-size: 0.95rem;
+            }
+
+            .label-with-icon .material-icons {
+                font-size: 20px;
+                color: var(--primary);
             }
 
             .form-group input {
                 width: 100%;
-                padding: 15px;
-                border: 2px solid #e1e8ed;
-                border-radius: 10px;
-                font-size: 16px;
+                padding: 14px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                font-size: 14px;
+                color: var(--text-primary);
+                background: var(--input-bg);
                 transition: all 0.3s ease;
-                background: #f8f9fa;
             }
 
             .form-group input:focus {
-                border-color: #00bfff;
                 outline: none;
-                box-shadow: 0 0 0 4px rgba(0, 191, 255, 0.1);
-                background: white;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
             }
 
             .login-btn {
                 width: 100%;
-                padding: 15px;
-                background: linear-gradient(135deg, #00bfff 0%, #0099ff 100%);
+                padding: 14px;
+                background: var(--header-bg);
                 color: white;
                 border: none;
-                border-radius: 10px;
+                border-radius: 12px;
                 font-size: 16px;
-                font-weight: 600;
+                font-weight: 500;
                 cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                margin-bottom: 20px;
                 transition: all 0.3s ease;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                box-shadow: 0 4px 15px rgba(0, 191, 255, 0.2);
             }
 
             .login-btn:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(0, 191, 255, 0.3);
-                background: linear-gradient(135deg, #0099ff 0%, #0077ff 100%);
-            }
-
-            .login-btn:active {
-                transform: translateY(0);
+                box-shadow: 0 6px 15px var(--shadow);
             }
 
             .register-link {
                 text-align: center;
-                margin-top: 25px;
-                padding-top: 20px;
-                border-top: 1px solid #e1e8ed;
+                margin-top: 20px;
             }
 
             .register-link a {
-                color: #00bfff;
+                color: var(--primary);
                 text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
                 font-weight: 500;
                 transition: all 0.3s ease;
-                position: relative;
             }
 
             .register-link a:hover {
-                color: #0077ff;
-            }
-
-            .register-link a::after {
-                content: '';
-                position: absolute;
-                width: 100%;
-                height: 2px;
-                bottom: -4px;
-                left: 0;
-                background: linear-gradient(to right, #00bfff, #0077ff);
-                transform: scaleX(0);
-                transition: transform 0.3s ease;
-            }
-
-            .register-link a:hover::after {
-                transform: scaleX(1);
+                color: var(--primary-dark);
             }
 
             .error, .success {
-                padding: 15px;
-                border-radius: 10px;
-                margin-bottom: 25px;
-                font-size: 0.95rem;
-                animation: messageFadeIn 0.5s ease-out;
-            }
-
-            @keyframes messageFadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(-10px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
+                padding: 12px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 14px;
             }
 
             .error {
-                color: #dc3545;
-                background: #ffe6e6;
-                border: 1px solid #ffcccc;
+                background-color: var(--error);
+                color: white;
             }
 
             .success {
-                color: #28a745;
-                background: #e6ffe6;
-                border: 1px solid #ccffcc;
+                background-color: var(--success);
+                color: white;
             }
 
             .footer {
                 text-align: center;
-                padding: 25px;
-                color: #576574;
-                background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-                border-top: 1px solid rgba(0, 0, 0, 0.1);
-                font-size: 0.9rem;
+                padding: 24px;
+                color: var(--text-secondary);
+                border-top: 1px solid var(--border);
+                background: var(--card-bg);
+                font-size: 14px;
             }
 
-            @media (max-width: 768px) {
+            @keyframes fadeInScale {
+                0% { opacity: 0; transform: scale(0.95); }
+                100% { opacity: 1; transform: scale(1); }
+            }
+
+            @media (max-width: 640px) {
                 .main-container {
-                    width: 95%;
-                    margin: 10px auto;
+                    border-radius: 16px;
+                    margin: 10px;
                 }
-
-                .header {
-                    padding: 20px;
-                }
-
-                .header h1 {
-                    font-size: 24px;
-                }
-
                 .content {
                     padding: 20px;
                 }
-
-                .login-container {
-                    padding: 25px;
+                .welcome-back {
+                    font-size: 24px;
                 }
-            }
-
-            /* Additional decorative elements */
-            .decorative-shape {
-                position: absolute;
-                background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 191, 255, 0.1) 100%);
-                border-radius: 50%;
-                z-index: -1;
-            }
-
-            .shape1 {
-                width: 200px;
-                height: 200px;
-                top: -100px;
-                right: -100px;
-            }
-
-            .shape2 {
-                width: 150px;
-                height: 150px;
-                bottom: -75px;
-                left: -75px;
             }
         </style>
     </head>
     <body>
-
-
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+            <span class="material-icons">dark_mode</span>
+        </button>
 
         <div class="main-container">
-            <div class="decorative-shape shape1"></div>
-            <div class="decorative-shape shape2"></div>
-
             <header class="header">
-                <h1> Online Home Decor</h1>
+                <h1>
+                    <span class="material-icons">home</span>
+                    Online Home Decor
+                </h1>
             </header>
 
             <main class="content">
                 <div class="login-container">
-                    <h2>Welcome</h2>
+                    <h2 class="welcome-back">Sajae Sapno Ka Ashiyana</h2>
 
                     <c:if test="${err!=null}">
                         <div class="error">
-                            <i class="fas fa-exclamation-circle"></i> ${err}
+                            <span class="material-icons">error_outline</span>
+                            ${err}
                         </div>
                     </c:if>
                     <c:if test="${param.act eq 'lo'}">
                         <div class="success">
-                            <i class="fas fa-check-circle"></i> Logout Successfully! Thanks for using our application.
+                            <span class="material-icons">check_circle_outline</span>
+                            Logout Successfully! Thanks for using our application.
                         </div>
                     </c:if>
                     <c:if test="${param.act eq 'reg'}">
                         <div class="success">
-                            <i class="fas fa-check-circle"></i> Registration Successful! Please login to continue.
+                            <span class="material-icons">check_circle_outline</span>
+                            Registration Successful! Please login to continue.
                         </div>
                     </c:if>
 
                     <f:form action="login" modelAttribute="command">
                         <div class="form-group">
-                            <label>Username</label>
+                            <div class="label-with-icon">
+                                <span class="material-icons">person_outline</span>
+                                <label>Username</label>
+                            </div>
                             <f:input path="loginName" placeholder="Enter your username"/>
                         </div>
+
                         <div class="form-group">
-                            <label>Password</label>
+                            <div class="label-with-icon">
+                                <span class="material-icons">lock_outline</span>
+                                <label>Password</label>
+                            </div>
                             <f:password path="password" placeholder="Enter your password"/>
                         </div>
-                        <button type="submit" class="login-btn">Sign In</button>
+
+                        <button type="submit" class="login-btn">
+                            <span class="material-icons">login</span>
+                            Sign In
+                        </button>
+
                         <div class="register-link">
-                            <a href="<s:url value="/reg_form"/>">Create New Account</a>
+                            <a href="<s:url value="/reg_form"/>">
+                                <span class="material-icons">person_add</span>
+                                Create New Account
+                            </a>
                         </div>
                     </f:form>
                 </div>
             </main>
 
             <footer class="footer">
-                ©[2024-2025] Copyrights by Yash TECHNOLOGIES | All Rights Reserved
+                © [2024-2025] Copyrights by Yash TECHNOLOGIES | All Rights Reserved
             </footer>
         </div>
+
+        <script>
+            function toggleTheme() {
+                const html = document.documentElement;
+                const theme = html.getAttribute('data-theme');
+                const newTheme = theme === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', newTheme);
+
+                const icon = document.querySelector('.theme-toggle .material-icons');
+                icon.textContent = newTheme === 'light' ? 'dark_mode' : 'light_mode';
+
+                localStorage.setItem('theme', newTheme);
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const icon = document.querySelector('.theme-toggle .material-icons');
+                icon.textContent = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
+            });
+        </script>
     </body>
 </html>

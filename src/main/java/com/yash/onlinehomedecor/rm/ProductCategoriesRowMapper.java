@@ -12,7 +12,7 @@ public class ProductCategoriesRowMapper implements RowMapper<ProductCategories> 
         ProductCategories category = new ProductCategories();
         category.setId(rs.getInt("id"));
         category.setName(rs.getString("name"));
-        category.setCreated_by(rs.getInt("created_by"));  // Changed to getInt
+        category.setCreated_by(rs.getInt("created_by"));
         category.setShop_id(rs.getInt("shop_id"));
         return category;
     }

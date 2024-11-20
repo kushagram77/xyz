@@ -32,7 +32,12 @@ public class CartDAOImpl extends BaseDAO implements CartDAO {
 
         if (cart != null) {
             // Load cart items
-            String itemsSql = "SELECT ci.*, p.* FROM cart_items ci " +
+//            String itemsSql = "SELECT ci.*, p.* FROM cart_items ci " +
+//                    "JOIN products p ON ci.product_id = p.id " +
+//                    "WHERE ci.cart_id = :cartId";
+
+            String itemsSql = "SELECT ci.*, p.name, p.description, p.price, p.image_path " +
+                    "FROM cart_items ci " +
                     "JOIN products p ON ci.product_id = p.id " +
                     "WHERE ci.cart_id = :cartId";
             params = new MapSqlParameterSource("cartId", cart.getId());
@@ -69,18 +74,34 @@ public class CartDAOImpl extends BaseDAO implements CartDAO {
         cart.setId(kh.getKey().intValue());
     }
 
+
+
     @Override
     public void addItemToCart(CartItem item) {
-        String sql = "INSERT INTO cart_items (cart_id, product_id, quantity) " +
-                "VALUES (:cartId, :productId, :quantity)";
+        String sql = "INSERT INTO cart_items (cart_id, product_id, quantity, price) " +
+                "VALUES (:cartId, :productId, :quantity, :price)";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("cartId", item.getCartId());
         params.addValue("productId", item.getProduct().getId());
         params.addValue("quantity", item.getQuantity());
+        params.addValue("price", item.getProduct().getPrice());
 
         getNamedParameterJdbcTemplate().update(sql, params);
     }
+
+//    @Override
+//    public void addItemToCart(CartItem item) {
+//        String sql = "INSERT INTO cart_items (cart_id, product_id, quantity) " +
+//                "VALUES (:cartId, :productId, :quantity)";
+//
+//        MapSqlParameterSource params = new MapSqlParameterSource();
+//        params.addValue("cartId", item.getCartId());
+//        params.addValue("productId", item.getProduct().getId());
+//        params.addValue("quantity", item.getQuantity());
+//
+//        getNamedParameterJdbcTemplate().update(sql, params);
+//    }
 
     @Override
     public void updateCartItem(CartItem item) {

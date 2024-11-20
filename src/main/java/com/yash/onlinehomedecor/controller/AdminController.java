@@ -27,9 +27,7 @@ public class AdminController {
     @GetMapping("/buyers")
     public String manageBuyers(Model model) {
         List<User> buyers = adminService.getAllBuyers();
-        for(User u:buyers){
-            System.out.println(u.toString());
-        }
+
         model.addAttribute("buyers", buyers);
         return "manage-buyers";
     }

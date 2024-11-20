@@ -15,6 +15,16 @@ public class Shops {
     private String contact_phone;
     private String business_registration_number;
     private ShopStatus status;
+    private String shopDescription;
+
+    public void setShop_description(String shopDescription) {
+            this.shopDescription=shopDescription;
+    }
+
+    public Object getShop_description() {
+        return shopDescription;
+    }
+
     public enum ShopStatus
     {    PENDING,    ACTIVE,    SUSPENDED}
     public Integer getId()

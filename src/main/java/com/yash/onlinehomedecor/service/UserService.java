@@ -13,4 +13,5 @@ public interface UserService {
     List<User> getUserList();
     User findById(Integer userId);
     List<User> findByProperty(String propName, Object propValue);
+
 }

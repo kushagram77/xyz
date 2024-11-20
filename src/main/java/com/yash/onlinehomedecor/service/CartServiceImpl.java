@@ -20,28 +20,44 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public Cart getOrCreateCart(Integer userId) {
+        System.out.println("In cart  service ");
         Cart cart = cartDAO.getCartByUserId(userId);
         if (cart == null) {
             cart = new Cart();
             cart.setUserId(userId);
             cartDAO.createCart(cart);
         }
-        System.out.println("In cart service");
+        System.out.println("In cart service 2");
         return cart;
     }
+
+//    @Override
+//    @Transactional
+//    public void addToCart(Integer userId, Integer productId, Integer quantity) {
+//
+//        Cart cart = getOrCreateCart(userId);
+//        Product product = productService.getProductById(productId);
+//
+//        CartItem item = new CartItem();
+//        item.setCartId(cart.getId());
+//        item.setProduct(product);
+//        item.setQuantity(quantity);
+//        System.out.println("In cart service");
+//        cartDAO.addItemToCart(item);
+//    }
+
 
     @Override
     @Transactional
     public void addToCart(Integer userId, Integer productId, Integer quantity) {
-
         Cart cart = getOrCreateCart(userId);
         Product product = productService.getProductById(productId);
-
+        System.out.println("In service "+product.getId());
         CartItem item = new CartItem();
         item.setCartId(cart.getId());
         item.setProduct(product);
         item.setQuantity(quantity);
-        System.out.println("In cart service");
+
         cartDAO.addItemToCart(item);
     }
 

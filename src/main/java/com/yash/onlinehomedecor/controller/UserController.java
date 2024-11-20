@@ -42,17 +42,17 @@ public class UserController {
                 //return "redirect:/admin/dashboard";
             }
             else if (loggedInUser .getRole() == UserRole.SELLER) {
-                System.out.println("Seller called");
+
                 return "dashboard_seller"; // Redirect to seller dashboard
                 //return "redirect:/admin/dashboard";
             }
             else if (loggedInUser .getRole() == UserRole.BUYER) {
-                System.out.println("Buyer called");
+
                 //return "dashboard_buyer"; // Redirect to buyer dashboard
                 return "redirect:/products";
             }
             else{
-                System.out.println("else called");
+
                 return "index";
 
                 //return "redirect:/admin/dashboard";
@@ -60,8 +60,8 @@ public class UserController {
 
         } catch (UserBlockedException ex) {
             model.addAttribute("err", ex.getMessage());
-            System.out.println("Exception called");
-            return "/index"; // JSP - Login FORM
+
+            return "index"; // JSP - Login FORM
         }
     }
 
@@ -121,8 +121,7 @@ public class UserController {
             User user = cmd.getUser();
             String selectedRole=cmd.getUser().getRole().name();
             user.setRole(UserRole.valueOf(selectedRole));
-            System.out.println("register inside controller");
-            System.out.println("cmd: " + cmd.toString());
+            model.addAttribute("successMessage", "Registration successful! You can now login to your account.");
             userService.register(user);
 
             return "redirect:index?act=reg";
@@ -136,5 +135,6 @@ public class UserController {
         session.setAttribute("user", user);
         session.setAttribute("userId", user.getId());
         session.setAttribute("role", user.getRole());
+        session.setAttribute("name",user.getName());
     }
 }
