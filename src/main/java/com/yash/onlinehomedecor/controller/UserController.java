@@ -34,12 +34,17 @@ public class UserController {
     public String handleLogin(@ModelAttribute("command") LoginCommand cmd, Model model, HttpSession session) {
         try {
             User loggedInUser  = userService.login(cmd.getLoginName(), cmd.getPassword());
+            if (loggedInUser == null) {
+                model.addAttribute("err", "Invalid username or password");
+                return "redirect:/";
+            }
+
             addUserInSession(loggedInUser , session);
             System.out.println("loggedInuser: " + loggedInUser);
             if(loggedInUser.getRole()==UserRole.ADMIN){
                 return  "dashboard_admin";
-               // System.out.println("Admin called");
-                //return "redirect:/admin/dashboard";
+
+
             }
             else if (loggedInUser .getRole() == UserRole.SELLER) {
 
@@ -53,7 +58,7 @@ public class UserController {
             }
             else{
 
-                return "index";
+                return "reg_form";
 
                 //return "redirect:/admin/dashboard";
             }
@@ -61,7 +66,7 @@ public class UserController {
         } catch (UserBlockedException ex) {
             model.addAttribute("err", ex.getMessage());
 
-            return "index"; // JSP - Login FORM
+            return "reg_form"; // JSP - index
         }
     }
 
@@ -78,6 +83,11 @@ public class UserController {
         return "dashboard_buyer"; // JSP for user dashboard
     }
 
+    @RequestMapping(value = "/xyz")
+    public String sellerDashboard(){
+        return  "dashboard_seller";
+    }
+
     @RequestMapping(value = "/admin/dashboard")
     public String adminDashboard() {
         return "dashboard_admin"; // JSP for admin dashboard
@@ -90,23 +100,7 @@ public class UserController {
         return "users"; // JSP for displaying user list
     }
 
-//    @RequestMapping(value = "/reg_form")
-//    public String registrationForm(Model model) {
-//        model.addAttribute("command", new UserCommand());
-//        return "reg_form"; // JSP for registration form
-//    }
-//
-//    @RequestMapping(value = "/register", method = RequestMethod.POST)
-//    public String registerUser (@ModelAttribute("command") UserCommand cmd, Model model) {
-//        try {
-//            User user = cmd.getUser ();
-//            userService.register(user);
-//            return "redirect:index?act=reg"; // Redirect to login page after successful registration
-//        } catch (DuplicateKeyException e) {
-//            model.addAttribute("err", "Email is already registered. Please select another email.");
-//            return "reg_form"; // JSP for registration form
-//        }
-//    }
+
 
     @RequestMapping(value = "/reg_form")
     public String registrationForm(Model model) {
@@ -130,6 +124,58 @@ public class UserController {
             return "reg_form";
         }
     }
+
+
+    @RequestMapping(value = "/seller/profile")
+    public String sellerProfile(Model model, HttpSession session) {
+        // Get the logged-in user from the session
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
+        return "edit_seller_profile"; // This will use the new JSP
+    }
+
+    @RequestMapping(value = "/seller/profile/update", method = RequestMethod.POST)
+    public String updateProfile(@ModelAttribute("user") User updatedUser,
+                                HttpSession session,
+                                Model model) {
+        try {
+
+            User currentUser = (User) session.getAttribute("user");
+            System.out.println(session.getAttribute("user"));
+            System.out.println("IN profile update,old user "+currentUser.toString());
+            // Update user details
+            currentUser.setName(updatedUser.getName());
+            currentUser.setEmail(updatedUser.getEmail());
+            currentUser.setAddress(updatedUser.getAddress());
+            System.out.println("IN profile update,new user "+updatedUser.toString());
+            // Update password only if a new password is provided
+            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+                // Here you might want to add password encoding
+                currentUser.setPassword(updatedUser.getPassword());
+            }
+
+            // Call service method to update user
+            userService.update(currentUser);
+
+            // Update session with new user details
+            session.setAttribute("user", currentUser);
+            session.setAttribute("name", currentUser.getName());
+
+            model.addAttribute("successMessage", "Profile updated successfully!");
+            return "dashboard_seller";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error updating profile. Please try again.");
+            e.printStackTrace();
+            return "edit_seller_profile";
+        }
+    }
+
+    @RequestMapping(value = "/seller/notifications")
+    String notificationsSeller(){
+        return "seller_notifications";
+    }
+
 
     private void addUserInSession(User user, HttpSession session) {
         session.setAttribute("user", user);

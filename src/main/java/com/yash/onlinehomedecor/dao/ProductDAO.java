@@ -24,4 +24,6 @@ public interface ProductDAO {
     void saveShop(Shops shop);
     void updateShop(Shops shop);
     void deleteShop(int id);
+
+    List<Product> getProductsBySellerId(int sellerId);
 }

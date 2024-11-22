@@ -3,7 +3,7 @@ package com.yash.onlinehomedecor.command;
 public class LoginCommand {
     private String loginName; // This will be the user's email
     private String password;
-
+    private String userType;
     // Getters and Setters
     public String getLoginName() {
         return loginName;
@@ -19,5 +19,14 @@ public class LoginCommand {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUserType() {
+
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }

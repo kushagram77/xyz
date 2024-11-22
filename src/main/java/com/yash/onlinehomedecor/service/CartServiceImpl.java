@@ -31,20 +31,7 @@ public class CartServiceImpl implements CartService {
         return cart;
     }
 
-//    @Override
-//    @Transactional
-//    public void addToCart(Integer userId, Integer productId, Integer quantity) {
-//
-//        Cart cart = getOrCreateCart(userId);
-//        Product product = productService.getProductById(productId);
-//
-//        CartItem item = new CartItem();
-//        item.setCartId(cart.getId());
-//        item.setProduct(product);
-//        item.setQuantity(quantity);
-//        System.out.println("In cart service");
-//        cartDAO.addItemToCart(item);
-//    }
+
 
 
     @Override
@@ -77,6 +64,10 @@ public class CartServiceImpl implements CartService {
         cartDAO.removeCartItem(cartItemId);
     }
 
+    public void removeFromCartItemBasedOnProductId(Integer productId){
+        cartDAO.removeFromCartItemBasedOnProductId(productId);
+    }
+
     @Override
     public Cart getCart(Integer userId) {
         return cartDAO.getCartByUserId(userId);
@@ -86,4 +77,6 @@ public class CartServiceImpl implements CartService {
     public Integer getCartItemCount(Integer userId) {
         return 108;
     }
+
+
 }

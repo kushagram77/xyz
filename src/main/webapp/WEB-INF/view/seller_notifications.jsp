@@ -1,19 +1,18 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 <html data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Buyers - Online Home Decor</title>
-    <!-- Material Icons -->
+    <title>Seller Notifications - Online Home Decor</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <style>
+        /* Reusing the entire CSS from dashboard.jsp */
         :root[data-theme="light"] {
             --primary: #7C3AED;
             --primary-dark: #6D28D9;
@@ -29,8 +28,6 @@
             --header-bg: linear-gradient(to right, #7C3AED, #6D28D9);
             --input-bg: #FFFFFF;
             --shadow: rgba(0, 0, 0, 0.1);
-            --table-stripe: #F8F7FF;
-            --danger: #DC2626;
         }
 
         :root[data-theme="dark"] {
@@ -48,8 +45,6 @@
             --header-bg: linear-gradient(to right, #6B46C1, #553C9A);
             --input-bg: #2D3748;
             --shadow: rgba(0, 0, 0, 0.3);
-            --table-stripe: #2D3748;
-            --danger: #EF4444;
         }
 
         * {
@@ -103,7 +98,6 @@
             gap: 0.5rem;
             font-family: 'Poppins', sans-serif;
             font-size: 1.5rem;
-            text-decoration: none;
         }
 
         .header-controls {
@@ -112,7 +106,7 @@
             gap: 1rem;
         }
 
-        .header .logout-btn {
+        .header .nav-btn {
             color: white;
             text-decoration: none;
             display: flex;
@@ -124,12 +118,11 @@
             font-weight: 500;
         }
 
-        .header .logout-btn:hover {
+        .header .nav-btn:hover {
             background: rgba(255, 255, 255, 0.1);
         }
 
         .theme-toggle {
-            position: static;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
@@ -139,8 +132,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s;
-            z-index: 1001;
+            transition: transform 0.3s ease;
         }
 
         .theme-toggle:hover {
@@ -153,7 +145,7 @@
             font-size: 20px;
         }
 
-        .container {
+        .dashboard-container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
@@ -161,48 +153,71 @@
             z-index: 1;
         }
 
-        .page-title {
+        .welcome-title {
             font-family: 'Poppins', sans-serif;
             font-size: 2rem;
             margin-bottom: 2rem;
-            color: var(--primary);
             background: linear-gradient(120deg, var(--primary) 0%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: fadeInScale 0.8s ease-out;
         }
 
-        .table {
-            width: 100%;
+        .notification-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .notification-card {
             background: var(--card-bg);
             border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px var(--shadow);
+            padding: 1.5rem;
             border: 1px solid var(--border);
-            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .table th,
-        .table td {
-            padding: 1rem;
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--border);
+        .notification-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px var(--shadow);
         }
 
-        .table th {
+        .notification-icon {
             background: var(--primary);
             color: white;
-            font-weight: 600;
-            text-align: left;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .table tr:nth-child(even) {
-            background: var(--table-stripe);
+        .notification-content {
+            flex-grow: 1;
         }
 
-        .btn-danger {
-            background: var(--danger);
+        .notification-content h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-content p {
+            color: var(--text-secondary);
+        }
+
+        .notification-time {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .back-btn {
+            background: var(--primary);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 8px;
             text-decoration: none;
             display: inline-flex;
@@ -210,42 +225,55 @@
             gap: 0.5rem;
             transition: all 0.3s ease;
             font-weight: 500;
-            border: none;
-            cursor: pointer;
+            margin-bottom: 1rem;
         }
 
-        .btn-danger:hover {
-            background: var(--error);
+        .back-btn:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            .welcome-title {
+                font-size: 1.5rem;
+            }
             .header {
                 padding: 1rem;
             }
             .header-controls {
                 gap: 0.5rem;
             }
-            .logout-btn span:not(.material-icons) {
+            .nav-btn span:not(.material-icons) {
                 display: none;
-            }
-            .table {
-                display: block;
-                overflow-x: auto;
             }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <a href="/admin/dashboard" class="h1" style="text-decoration: none;">
-            <h1>
-                <span class="material-icons">dashboard</span>
-                Admin Dashboard
-            </h1>
-        </a>
+        <h1>
+            <span class="material-icons">store</span>
+            Online Home Decor
+        </h1>
         <div class="header-controls">
-            <a href="/OHDSpring/index" class="logout-btn">
+            <a href="/OHDSpring/xyz" class="nav-btn">
+                <span class="material-icons">dashboard</span>
+                <span>Back to Dashboard</span>
+            </a>
+            <a href="/OHDSpring/seller/profile" class="nav-btn">
+                <span class="material-icons">account_circle</span>
+                <span>Profile</span>
+            </a>
+            <a href="/OHDSpring/index" class="nav-btn">
                 <span class="material-icons">logout</span>
                 <span>Logout</span>
             </a>
@@ -255,56 +283,71 @@
         </div>
     </header>
 
-    <div class="container">
-        <h2 class="page-title">Manage Buyers</h2>
+    <div class="dashboard-container">
+        <h2 class="welcome-title">Heyyyyy,Dhyan Do ....</h2>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${buyers}" var="buyer">
-                    <tr>
-                        <td>${buyer.id}</td>
-                        <td>${buyer.name}</td>
-                        <td>${buyer.email}</td>
-                        <td>
-                            <c:url value="/admin/buyers/${buyer.id}/block" var="blockUrl" />
-                            <form action="${blockUrl}" method="post" style="display:inline;">
-                               <button type="submit" class="btn-danger">
-                                    <span class="material-icons">block</span>
-                                               Block
-                               </button>
-                            </form>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+
+
+        <div class="notification-list">
+            <div class="notification-card">
+                <div class="notification-icon">
+                    <span class="material-icons">shopping_cart</span>
+                </div>
+                <div class="notification-content">
+                    <h4>New Order Received</h4>
+                    <p>You have a new order for Curtains</p>
+                </div>
+                <div class="notification-time">2 hours ago</div>
+            </div>
+
+            <div class="notification-card">
+                <div class="notification-icon">
+                    <span class="material-icons">inventory</span>
+                </div>
+                <div class="notification-content">
+                    <h4>Low Stock Alert</h4>
+                    <p>Decorative Throw Pillows are running low on inventory</p>
+                </div>
+                <div class="notification-time">5 hours ago</div>
+            </div>
+
+            <div class="notification-card">
+                <div class="notification-icon">
+                    <span class="material-icons">settings</span>
+                </div>
+                <div class="notification-content">
+                    <h4>Profile Update</h4>
+                    <p>Dashboard Update coming soon</p>
+                </div>
+                <div class="notification-time">1 day ago</div>
+            </div>
+
+            <div class="notification-card">
+                <div class="notification-icon">
+                    <span class="material-icons">payments</span>
+                </div>
+                <div class="notification-content">
+                    <h4>Payment Processed</h4>
+                    <p>Monthly earnings of ₹25,000 have been processed</p>
+                </div>
+                <div class="notification-time">3 days ago</div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Theme toggle functionality
         function toggleTheme() {
             const html = document.documentElement;
             const theme = html.getAttribute('data-theme');
             const newTheme = theme === 'light' ? 'dark' : 'light';
             html.setAttribute('data-theme', newTheme);
 
-            // Update theme toggle icon
             const icon = document.querySelector('.theme-toggle .material-icons');
             icon.textContent = newTheme === 'light' ? 'dark_mode' : 'light_mode';
 
-            // Save theme preference
             localStorage.setItem('theme', newTheme);
         }
 
-        // Set initial theme based on user preference
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);

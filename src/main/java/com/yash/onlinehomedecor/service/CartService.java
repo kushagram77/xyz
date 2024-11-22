@@ -9,6 +9,7 @@ public interface CartService {
     void updateCartItemQuantity(Integer cartItemId, Integer quantity);
     void removeFromCart(Integer cartItemId);
     Cart getCart(Integer userId);
-
+    void removeFromCartItemBasedOnProductId(Integer productId);
     Integer getCartItemCount(Integer userId);
+
 }

@@ -1,6 +1,7 @@
 package com.yash.onlinehomedecor.domain;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 /**
  *
@@ -98,5 +99,20 @@ private byte[] image;
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", category_id=" + category_id +
+                ", seller_id=" + seller_id +
+                ", shop_id=" + shop_id +
+                ", available=" + available +
+                ", image=" + Arrays.toString(image) +
+                '}';
     }
 }

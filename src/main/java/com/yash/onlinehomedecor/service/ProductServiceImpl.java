@@ -8,6 +8,7 @@ import com.yash.onlinehomedecor.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -88,5 +89,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteShop(int id) {
         productDAO.deleteShop(id);
+    }
+
+    @Override
+    public List<Product> getProductsBySellerId(int sellerId) {
+        List<Product> ls=new ArrayList<>();
+        ls=productDAO.getProductsBySellerId(sellerId);
+        for(Product p:ls){
+            System.out.println("In Product Service:"+p.getDescription());
+        }
+        return productDAO.getProductsBySellerId(sellerId);
     }
 }

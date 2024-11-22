@@ -1,6 +1,7 @@
 package com.yash.onlinehomedecor.service;
 
 import com.yash.onlinehomedecor.dao.BaseDAO;
+import com.yash.onlinehomedecor.dao.CartDAO;
 import com.yash.onlinehomedecor.dao.UserDAO;
 import com.yash.onlinehomedecor.domain.User;
 import com.yash.onlinehomedecor.exception.UserBlockedException;
@@ -19,24 +20,16 @@ public class UserServiceImpl extends BaseDAO implements UserService {
     @Autowired
     private UserDAO userDAO;
 
+    @Autowired
+    private CartDAO cartDAO;
+
     @Override
     public void register(User u) {
         System.out.println("register in service");
         userDAO.save(u);
     }
 
- //   @Override
-//    public User login(String name, String password) throws UserBlockedException {
-//        try {
-//            User u = userDAO.findByProperty("name", name).get(0);
-//            if (!u.getPassword().equals(password)) {
-//                throw new UserBlockedException("Invalid password");
-//            }
-//            return u;
-//        } catch (EmptyResultDataAccessException ex) {
-//            throw new UserBlockedException("Invalid email");
-//        }
-//    }
+
 
     @Override
     public User login(String loginName, String password)  {
@@ -81,5 +74,10 @@ public class UserServiceImpl extends BaseDAO implements UserService {
     @Override
     public List<User> findByProperty(String propName, Object propValue) {
         return userDAO.findByProperty(propName, propValue);
+    }
+    @Override
+    public void blockUser(Integer userId){
+        userDAO.delete(userId);
+        cartDAO.deleteByUserId(userId);
     }
 }

@@ -90,18 +90,7 @@ public class CartDAOImpl extends BaseDAO implements CartDAO {
         getNamedParameterJdbcTemplate().update(sql, params);
     }
 
-//    @Override
-//    public void addItemToCart(CartItem item) {
-//        String sql = "INSERT INTO cart_items (cart_id, product_id, quantity) " +
-//                "VALUES (:cartId, :productId, :quantity)";
-//
-//        MapSqlParameterSource params = new MapSqlParameterSource();
-//        params.addValue("cartId", item.getCartId());
-//        params.addValue("productId", item.getProduct().getId());
-//        params.addValue("quantity", item.getQuantity());
-//
-//        getNamedParameterJdbcTemplate().update(sql, params);
-//    }
+
 
     @Override
     public void updateCartItem(CartItem item) {
@@ -147,5 +136,18 @@ public class CartDAOImpl extends BaseDAO implements CartDAO {
             }
             return null;
         });
+    }
+
+    public void removeFromCartItemBasedOnProductId(Integer productId){
+
+        String sql = "DELETE FROM cart_items WHERE product_id = :productId";
+        MapSqlParameterSource params = new MapSqlParameterSource("productId",productId);
+        getNamedParameterJdbcTemplate().update(sql, params);
+    }
+
+    public void deleteByUserId(Integer userId){
+        String sql="DELETE FROM cart where user_id = :userId";
+        MapSqlParameterSource params=new MapSqlParameterSource("userId",userId);
+        getNamedParameterJdbcTemplate().update(sql,params);
     }
 }

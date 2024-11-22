@@ -99,26 +99,30 @@
         }
 
         .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
 
-        .header .logout-btn {
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-            font-weight: 500;
-        }
+                .header .nav-btn {
+                    color: white;
+                    text-decoration: none;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    transition: background-color 0.3s;
+                    font-weight: 500;
+                }
 
-        .header .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
+                .header .nav-btn:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
+
+
+
 
         .theme-toggle {
             position: static;
@@ -246,20 +250,32 @@
 </head>
 <body>
     <header class="header">
-        <h1>
-            <span class="material-icons">dashboard</span>
-            Admin Dashboard
-        </h1>
-        <div class="header-controls">
-            <a href="/OHDSpring/index" class="logout-btn">
-                <span class="material-icons">logout</span>
-                <span>Logout</span>
-            </a>
-            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <span class="material-icons">dark_mode</span>
-            </button>
-        </div>
-    </header>
+            <h1>
+                <span class="material-icons">dashboard</span>
+                Admin Dashboard
+            </h1>
+            <div class="header-controls">
+                <a href="/OHDSpring/admin/notifications" class="nav-btn">
+                    <span class="material-icons">notifications</span>
+                    <span>Notifications</span>
+                </a>
+                <a href="/OHDSpring/admin/profile" class="nav-btn">
+                    <span class="material-icons">account_circle</span>
+                    <span>Profile</span>
+                </a>
+                <a href="/OHDSpring/admin/dashboard" class="nav-btn">
+                    <span class="material-icons">dashboard</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/OHDSpring/index" class="nav-btn">
+                    <span class="material-icons">logout</span>
+                    <span>Logout</span>
+                </a>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <span class="material-icons">dark_mode</span>
+                </button>
+            </div>
+        </header>
 
     <div class="dashboard-container">
         <h2 class="welcome-title">Welcome <% out.print(session.getAttribute("name")); %></h2>

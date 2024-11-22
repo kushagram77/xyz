@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,16 @@ public class ProductDAOImpl extends BaseDAO implements ProductDAO {
 
         getNamedParameterJdbcTemplate().update(sql, m);
     }
-
+    @Override
+    public List<Product> getProductsBySellerId(int sellerId) {
+        String sql = "SELECT * FROM products WHERE seller_id = ?";
+        List<Product> ls=new ArrayList<>();
+        ls=getJdbcTemplate().query(sql,new  ProductRowMapper(),sellerId);
+        for(Product p:ls){
+            System.out.println("In Product DAO:"+p.getDescription());
+        }
+        return getJdbcTemplate().query(sql, new ProductRowMapper(), sellerId);
+    }
     @Override
     public List<Product> getAllProducts() {
         String sql = "SELECT * FROM products";
@@ -57,8 +67,8 @@ public class ProductDAOImpl extends BaseDAO implements ProductDAO {
     @Override
     public void updateProduct(Product product) {
         System.out.println("update call hui");
-        String sql = "UPDATE products SET name = ?, description = ?, price = ?, category_id = ?, seller_id = ?, shop_id = ? WHERE id = ?";
-        getJdbcTemplate().update(sql, product.getName(), product.getDescription(), product.getPrice(), product.getCategory_id(), product.getSeller_id(), product.getShop_id(), product.getId());
+        String sql = "UPDATE products SET name = ?, description = ?, price = ? WHERE id = ?";
+        getJdbcTemplate().update(sql, product.getName(), product.getDescription(), product.getPrice(), product.getId());
     }
 
     @Override

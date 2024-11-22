@@ -44,15 +44,15 @@ public class UserDAOImpl extends BaseDAO implements UserDAO{
                 "SET `name` = :name, " +
                 "`email` = :email, " +
                 "`password` = :password, " +
-                "`role` = :role ," +
-                "`address`=:address"+
+
+                "`address`=:address "+
                 "WHERE id = :userId";
         Map m = new HashMap();
         m.put("name", u.getName());
 
         m.put("email", u.getEmail());
 
-        m.put("role", u.getRole().name());
+
 
         m.put("userId", u.getId());
 

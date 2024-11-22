@@ -281,6 +281,54 @@
                 .welcome-back {
                     font-size: 24px;
                 }
+
+                 .form-group {
+                                margin-bottom: 24px;
+                            }
+
+                            .radio-group {
+                                display: flex;
+                                gap: 24px;
+                                margin-bottom: 24px;
+                                padding: 16px;
+                                background: var(--bg-primary);
+                                border-radius: 12px;
+                                border: 1px solid var(--border);
+                            }
+
+                            .radio-option {
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                cursor: pointer;
+                                padding: 8px 16px;
+                                border-radius: 8px;
+                                transition: all 0.3s ease;
+                            }
+
+                            .radio-option:hover {
+                                background: var(--primary-dark);
+                                color: white;
+                            }
+
+                            .radio-option input[type="radio"] {
+                                width: 18px;
+                                height: 18px;
+                                margin: 0;
+                                cursor: pointer;
+                                accent-color: var(--primary);
+                            }
+
+                            .radio-option label {
+                                font-weight: 500;
+                                cursor: pointer;
+                                user-select: none;
+                            }
+
+
+
+
+
             }
         </style>
     </head>
@@ -319,6 +367,17 @@
                             Registration Successful! Please login to continue.
                         </div>
                     </c:if>
+
+                 <!--   <div class="radio-group">
+                             <div class="radio-option">
+                                      <input type="radio" id="buyer" name="userType" value="buyer" checked>
+                                      <label for="buyer">Login as Buyer</label><input type="radio" id="seller" name="userType" value="seller">
+                                                                                                                      <label for="seller">Login as Seller</label>
+                                      </div>
+                                      <div class="radio-option">
+
+                             </div>
+                    </div>-----!>
 
                     <f:form action="login" modelAttribute="command">
                         <div class="form-group">

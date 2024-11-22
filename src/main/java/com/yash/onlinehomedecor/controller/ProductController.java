@@ -3,6 +3,7 @@ package com.yash.onlinehomedecor.controller;
 
 import com.yash.onlinehomedecor.domain.Product;
 import com.yash.onlinehomedecor.domain.ProductCategories;
+import com.yash.onlinehomedecor.service.CartService;
 import com.yash.onlinehomedecor.service.ProductService;
 import com.yash.onlinehomedecor.service.ProductCategoriesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +19,18 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
 @Controller
 @RequestMapping("/products")
-public class ProductController {
+public class ProductController  {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private CartService cartService;
 
     @GetMapping("/add")
     public String showAddProductForm(Model model) {
@@ -33,26 +38,8 @@ public class ProductController {
         model.addAttribute("categories", productService.getAllProductCategories());
         model.addAttribute("shops", productService.getAllShops());
 
-        return "add-product";
+        return "add_product";
     }
-
-//    @PostMapping("/add")
-//    public String addProduct(@ModelAttribute Product product,
-//                             @RequestParam("productImage") MultipartFile file,
-//
-//                            RedirectAttributes redirectAttributes) throws IOException {
-//
-//
-//           product.setImage(file.getBytes());
-//
-//            System.out.println(product.getImage());
-//            System.out.println(file.getBytes());
-//            productService.addProduct(product);
-//           redirectAttributes.addFlashAttribute("message", "Product added successfully.");
-//           redirectAttributes.addFlashAttribute("messageType", "success");
-//
-//        return "redirect:/products/add";
-//    }
 
 
 
@@ -174,33 +161,51 @@ public class ProductController {
         model.addAttribute("product", product);
         model.addAttribute("categories", productService.getAllProductCategories());
         model.addAttribute("shops", productService.getAllShops());
-        return "edit-product";
+        return "edit_products";
     }
 
     @PostMapping("/{id}/edit")
     public String updateProduct(@PathVariable int id, @ModelAttribute Product product,
-                                @RequestParam("productImage") MultipartFile file,
-                                @RequestParam("available") boolean available,
+                              /*  @RequestParam("productImage") MultipartFile file,
+                                @RequestParam("available") boolean available,*/
                                 RedirectAttributes redirectAttributes) {
-        try {
-            product.setId(id);
-            product.setImage(file.getBytes());
-            product.setAvailable(available);
-            productService.updateProduct(product);
-            redirectAttributes.addFlashAttribute("message", "Product updated successfully.");
-            redirectAttributes.addFlashAttribute("messageType", "success");
-        } catch (IOException e) {
-            redirectAttributes.addFlashAttribute("message", "Error uploading product image.");
-            redirectAttributes.addFlashAttribute("messageType", "error");
-        }
-        return "redirect:/products/{id}";
+        product.setId(id);
+//            product.setImage(file.getBytes());
+//            product.setAvailable(available);
+        productService.updateProduct(product);
+        redirectAttributes.addFlashAttribute("message", "Product updated successfully.");
+        redirectAttributes.addFlashAttribute("messageType", "success");
+        return "dashboard_seller";
+
     }
 
     @PostMapping("/{id}/delete")
     public String deleteProduct(@PathVariable int id, RedirectAttributes redirectAttributes) {
+
+
+        cartService.removeFromCartItemBasedOnProductId(id);
         productService.deleteProduct(id);
         redirectAttributes.addFlashAttribute("message", "Product deleted successfully.");
         redirectAttributes.addFlashAttribute("messageType", "success");
-        return "redirect:/products";
+        return "redirect:/products/seller";
     }
+
+
+    @GetMapping("/seller")
+    public String listSellerProducts(Model model, HttpSession session) {
+
+        Integer sellerId = (Integer) session.getAttribute("userId");
+        if (sellerId == 0) {
+            return "redirect:/login";
+        }
+        System.out.println(session.getAttribute("userId"));
+        System.out.println("IN method /products/seller");
+        List<Product> products = productService.getProductsBySellerId(sellerId);
+        System.out.println(products);
+
+        model.addAttribute("products", products);
+        return "seller_products";
+    }
+
+
 }
