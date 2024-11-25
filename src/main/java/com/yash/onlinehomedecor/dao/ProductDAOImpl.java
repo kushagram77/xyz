@@ -25,8 +25,8 @@ public class ProductDAOImpl extends BaseDAO implements ProductDAO {
 
     @Override
     public void saveProduct(Product product) {
-        String sql = "INSERT INTO products (name, description, price, category_id, seller_id, shop_id,image_path) " +
-                "VALUES (:name, :description, :price, :category_id, :seller_id, :shop_id,:image_path)";
+        String sql = "INSERT INTO products (name, description, price, category_id, seller_id, shop_id,image) " +
+                "VALUES (:name, :description, :price, :category_id, :seller_id, :shop_id,:image)";
         Map m=new HashMap();
         m.put("name",product.getName());
 
@@ -35,7 +35,7 @@ public class ProductDAOImpl extends BaseDAO implements ProductDAO {
         m.put("description",product.getDescription());
         m.put("seller_id",product.getSeller_id());
         m.put("shop_id",product.getShop_id());
-        m.put("image_path",product.getImage());
+        m.put("image",product.getImage());
 
 
 

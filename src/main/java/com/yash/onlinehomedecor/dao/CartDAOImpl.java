@@ -36,7 +36,7 @@ public class CartDAOImpl extends BaseDAO implements CartDAO {
 //                    "JOIN products p ON ci.product_id = p.id " +
 //                    "WHERE ci.cart_id = :cartId";
 
-            String itemsSql = "SELECT ci.*, p.name, p.description, p.price, p.image_path " +
+            String itemsSql = "SELECT ci.*, p.name, p.description, p.price, p.image " +
                     "FROM cart_items ci " +
                     "JOIN products p ON ci.product_id = p.id " +
                     "WHERE ci.cart_id = :cartId";
@@ -149,5 +149,19 @@ public class CartDAOImpl extends BaseDAO implements CartDAO {
         String sql="DELETE FROM cart where user_id = :userId";
         MapSqlParameterSource params=new MapSqlParameterSource("userId",userId);
         getNamedParameterJdbcTemplate().update(sql,params);
+    }
+
+
+
+    @Override
+    public Integer getCartItemCount(Integer userId) {
+        String sql = "SELECT COALESCE(SUM(ci.quantity), 0) " +
+                "FROM cart c " +
+                "LEFT JOIN cart_items ci ON c.id = ci.cart_id " +
+                "WHERE c.user_id = :userId";
+
+        MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
+
+        return getNamedParameterJdbcTemplate().queryForObject(sql, params, Integer.class);
     }
 }

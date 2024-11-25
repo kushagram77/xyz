@@ -21,7 +21,7 @@ public class AdminDAOImpl extends BaseDAO implements AdminDAO {
 
     @Override
     public List<User> findAllSellers() {
-        String sql = "SELECT * FROM user WHERE role = 'SELLER'";
+        String sql = "SELECT * FROM user WHERE role IN('SELLER','REQUESTEDSELLER')";
         return getJdbcTemplate().query(sql, new UserRowMapper());
     }
 

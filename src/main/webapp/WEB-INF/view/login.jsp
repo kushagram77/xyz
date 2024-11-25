@@ -340,14 +340,8 @@
         <div class="main-container">
             <header class="header">
                 <h1>
-
                     <span class="material-icons">home</span>
                     Online Home Decor
-
-                    <!----<a href="<s:url value="/"/>" >
-                                            <span class="material-icons">home</span>
-                                            Home
-                                        </a>---!>
                 </h1>
             </header>
 
@@ -385,7 +379,7 @@
                              </div>
                     </div>-----!>
 
-                    <f:form action="loginCheck" modelAttribute="command">
+                    <f:form action="login" modelAttribute="command">
                         <div class="form-group">
                             <div class="label-with-icon">
                                 <span class="material-icons">person_outline</span>

@@ -271,8 +271,54 @@
                     padding: 12px;
                 }
             }
+
+            /* Success message styles */
+            .success {
+                background-color: var(--success);
+                color: white;
+                padding: 16px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 14px;
+                animation: slideDown 0.5s ease-out;
+            }
+
+            .success .material-icons {
+                font-size: 20px;
+            }
+
+            @keyframes slideDown {
+                0% {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
         </style>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script>
+        // Add this to your existing script section
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-hide success message after 5 seconds
+            const successMessage = document.querySelector('.success');
+            if (successMessage) {
+                setTimeout(function() {
+                    successMessage.style.transition = 'opacity 0.5s ease-out';
+                    successMessage.style.opacity = '0';
+                    setTimeout(function() {
+                        successMessage.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            }
+        });
+        </script>
         <script>
                     $(document).ready(function (){
 
@@ -285,7 +331,7 @@
 
                             const errorMessage = validationFunc(value);
                             if (errorMessage) {
-                                $(field).after('<div class="error" style="color: red; margin-top: 5px;">' + errorMessage + '</div>');
+                                $(field).after('<div class="error" style="color: white; margin-top: 5px; font-weight: 500;">' + errorMessage + '</div>');
                                 return false;
                             }
                             return true;
@@ -427,22 +473,47 @@
             <span class="material-icons">dark_mode</span>
         </button>
 
+
+
         <!-- Fixed Header -->
         <div class="header">
             <h1>
                 <span class="material-icons">how_to_reg</span>
                 User Registration
+
+                <a href="<s:url value="/"/>" class="home-button" style="position: absolute; left: 20px; color: white; text-decoration: none;">
+                                    <span class="material-icons">home</span>
+                                    Home
+                </a>
             </h1>
+
+
         </div>
 
         <div class="main-container">
             <div class="content">
-                <c:if test="${err!=null}">
-                    <div class="error">
-                        <span class="material-icons">error_outline</span>
-                        ${err}
-                    </div>
-                </c:if>
+               <!-- Add this temporarily at the top of your content div for debugging -->
+               <div style="display: none">
+                   Debug - Success Message: ${successMessage}
+                   Debug - Error Message: ${err}
+               </div>
+                        <!-- Success Message -->
+                        <c:if test="${not empty successMessage}">
+                            <div class="success" style="margin-bottom: 20px;">
+                                <span class="material-icons">check_circle</span>
+                                <span>${successMessage}</span>
+                            </div>
+                        </c:if>
+
+                        <!-- Error Message -->
+                        <c:if test="${not empty err}">
+                            <div class="error" style="margin-bottom: 20px;">
+                                <span class="material-icons">error_outline</span>
+                                <span>${err}</span>
+                            </div>
+                        </c:if>
+
+
 
                 <div class="form-container">
                     <f:form action="register" modelAttribute="userCommand" onsubmit="return validateForm()">

@@ -44,7 +44,7 @@ public class UserDAOImpl extends BaseDAO implements UserDAO{
                 "SET `name` = :name, " +
                 "`email` = :email, " +
                 "`password` = :password, " +
-
+                "`role`=:role, "+
                 "`address`=:address "+
                 "WHERE id = :userId";
         Map m = new HashMap();
@@ -57,6 +57,7 @@ public class UserDAOImpl extends BaseDAO implements UserDAO{
         m.put("userId", u.getId());
 
         m.put("password",u.getPassword());
+        m.put("role",u.getRole().name());
         m.put("address",u.getAddress());
         getNamedParameterJdbcTemplate().update(sql, m);
     }

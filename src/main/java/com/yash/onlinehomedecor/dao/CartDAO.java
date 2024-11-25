@@ -13,5 +13,7 @@ public interface CartDAO {
     CartItem getCartItem(Integer cartItemId);
     void removeFromCartItemBasedOnProductId(Integer productId);
     void deleteByUserId(Integer userId);
+
+    Integer getCartItemCount(Integer userId);
 }
 

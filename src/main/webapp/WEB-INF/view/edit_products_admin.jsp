@@ -8,10 +8,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Seller Products - Online Home Decor</title>
+        <title>Edit Product - Online Home Decor</title>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
         <style>
+            /* Reusing the exact same CSS from seller_products.jsp */
             :root[data-theme="light"] {
                 --primary: #7C3AED;
                 --primary-dark: #6D28D9;
@@ -107,8 +108,8 @@
                 background: rgba(255, 255, 255, 0.1);
             }
 
-            .add-product-btn {
-                background: var(--accent);
+            .back-btn {
+                background: var(--primary);
                 color: white;
                 border: none;
                 padding: 8px 16px;
@@ -119,167 +120,134 @@
                 align-items: center;
                 gap: 8px;
                 transition: all 0.3s ease;
+                text-decoration: none;
             }
 
-            .add-product-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px var(--shadow);
-            }
-
-            .products-container {
-                max-width: 1200px;
+            .form-container {
+                max-width: 800px;
                 margin: 32px auto;
-                padding: 0 24px;
-            }
-
-            .products-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 24px;
-                margin-top: 24px;
-            }
-
-            .product-card {
+                padding: 24px;
                 background: var(--card-bg);
                 border-radius: 16px;
-                overflow: hidden;
                 box-shadow: 0 4px 15px var(--shadow);
                 border: 1px solid var(--border);
-                transition: transform 0.3s ease;
             }
 
-            .product-card:hover {
-                transform: translateY(-5px);
-            }
-
-            .product-image {
-                width: 100%;
-                height: 200px;
-                object-fit: cover;
-            }
-
-            .product-details {
-                padding: 16px;
-            }
-
-            .product-title {
-                font-size: 18px;
-                font-weight: 600;
+            .form-title {
+                font-size: 24px;
                 color: var(--text-primary);
-                margin-bottom: 8px;
+                margin-bottom: 24px;
+                text-align: center;
             }
 
-            .product-price {
-                font-size: 20px;
-                color: var(--primary);
-                font-weight: 700;
-                margin-bottom: 12px;
-            }
-
-            .product-description {
-                color: var(--text-secondary);
-                font-size: 14px;
+            .form-group {
                 margin-bottom: 16px;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
             }
 
-            .product-actions {
-                display: flex;
-                gap: 8px;
+            .form-label {
+                display: block;
+                margin-bottom: 8px;
+                color: var(--text-primary);
+                font-weight: 500;
             }
 
-            .edit-btn, .delete-btn {
-                flex: 1;
-                padding: 8px;
+            .form-input {
+                width: 100%;
+                padding: 10px 12px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: var(--input-bg);
+                color: var(--text-primary);
+                transition: border-color 0.3s;
+            }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary);
+            }
+
+            .form-checkbox {
+                margin-right: 8px;
+            }
+
+            .form-submit {
+                width: 100%;
+                padding: 12px;
+                background: var(--primary);
+                color: white;
                 border: none;
                 border-radius: 8px;
-                font-weight: 500;
+                font-weight: 600;
                 cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 4px;
                 transition: all 0.3s ease;
             }
 
-            .edit-btn {
-                background: var(--primary);
-                color: white;
-            }
-
-            .delete-btn {
-                background: var(--error);
-                color: white;
-            }
-
-            .edit-btn:hover, .delete-btn:hover {
+            .form-submit:hover {
                 filter: brightness(110%);
             }
 
+            .image-preview {
+                margin-bottom: 16px;
+                max-width: 100%;
+                border-radius: 8px;
+                max-height: 300px;
+                object-fit: cover;
+            }
+
             @media (max-width: 640px) {
-                .products-grid {
-                    grid-template-columns: 1fr;
-                }
-
-                .fixed-header {
-                    padding: 12px 16px;
-                }
-
-                .header-title {
-                    font-size: 20px;
-                }
-
-                .product-card {
-                    margin: 0 16px;
+                .form-container {
+                    margin: 16px;
+                    padding: 16px;
                 }
             }
+
+
+
+
         </style>
     </head>
     <body>
         <header class="fixed-header">
             <h1 class="header-title">
-                <span class="material-icons">store</span>
-                My Products
+                <span class="material-icons">edit</span>
+                Edit Product
             </h1>
             <div class="header-actions">
+                <a href="<s:url value='/products/seller'/>" class="back-btn">
+                    <span class="material-icons">arrow_back</span>
+                    Back to Products
+                </a>
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                     <span class="material-icons">dark_mode</span>
                 </button>
-                <a href="<s:url value='/products/add'/>" class="add-product-btn">
-                    <span class="material-icons">add</span>
-                    Add Product
-                </a>
             </div>
         </header>
 
-        <main class="products-container">
-            <div class="products-grid">
-                <c:forEach var="product" items="${products}">
-                    <div class="product-card">
-                        <img src="<s:url value='/products/image/${product.id}'/>" alt="${product.name}" class="product-image">
-                        <div class="product-details">
-                            <h2 class="product-title">${product.name}</h2>
-                            <p class="product-price">₹${product.price}</p>
-                            <p class="product-description">${product.description}</p>
-                            <div class="product-actions">
-                                <a href="<s:url value='/admin/products/${product.id}/edit'/>" class="edit-btn">
-                                    <span class="material-icons">edit</span>
-                                    Edit
-                                </a>
-                                <form action="<s:url value='/products/${product.id}/delete'/>" method="POST" style="flex: 1;">
-                                    <button type="submit" class="delete-btn">
-                                        <span class="material-icons">delete</span>
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
+        <main class="form-container">
+            <form action="<s:url value=''/>" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label class="form-label" for="name">Product Name</label>
+                    <input type="text" id="name" name="name" class="form-input" value="${product.name}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="price">Price</label>
+                    <input type="number" id="price" name="price" class="form-input" value="${product.price}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea id="description" name="description" class="form-input" rows="4" required>${product.description}</textarea>
+                </div>
+
+
+
+
+
+
+
+                <button type="submit" class="form-submit">Update Product</button>
+            </form>
         </main>
 
         <script>

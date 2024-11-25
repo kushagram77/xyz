@@ -33,7 +33,7 @@ public class UserServiceImpl extends BaseDAO implements UserService {
 
     @Override
     public User login(String loginName, String password)  {
-        System.out.println("lp:" + loginName + password);
+
         String sql = "SELECT id, name, email, password, role " +
                 "from user where name=:ln and password=:pw";
 
@@ -42,9 +42,9 @@ public class UserServiceImpl extends BaseDAO implements UserService {
         m.put("pw", password);
 
         try {
-            System.out.println(getNamedParameterJdbcTemplate().queryForObject(sql, m, new UserRowMapper()));
+            //System.out.println(getNamedParameterJdbcTemplate().queryForObject(sql, m, new UserRowMapper()));
             User u = getNamedParameterJdbcTemplate().queryForObject(sql, m, new UserRowMapper());
-            System.out.println(u);
+            //System.out.println(u);
             return u;
         } catch (EmptyResultDataAccessException ex) {
             return null;

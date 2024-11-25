@@ -265,37 +265,71 @@
     <div class="container">
         <h2 class="page-title">Manage Sellers</h2>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${sellers}" var="seller">
-                    <tr>
-                        <td>${seller.id}</td>
-                        <td>${seller.name}</td>
-                        <td>${seller.email}</td>
-                        <td>
-                            <c:url value="/admin/sellers/${seller.id}/approve" var="approveUrl" />
-                            <c:url value="/admin/sellers/${seller.id}/reject" var="rejectUrl" />
-                            <a href="${approveUrl}" class="btn btn-success">
-                                <span class="material-icons">check_circle</span>
-                                Approve
-                            </a>
-                            <a href="${rejectUrl}" class="btn btn-danger" style="margin-left: 10px;">
-                                <span class="material-icons">cancel</span>
-                                Reject
-                            </a>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+        <%-- Add this below the existing page-title --%>
+        <c:if test="${not empty successMessage}">
+            <div class="alert alert-success" style="background: var(--success); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                ${successMessage}
+            </div>
+        </c:if>
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger" style="background: var(--danger); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                ${errorMessage}
+            </div>
+        </c:if>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Actions</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <c:forEach items="${sellers}" var="seller">
+            <tr>
+                <td>${seller.id}</td>
+                <td>${seller.name}</td>
+                <td>${seller.email}</td>
+                <td>
+                    <c:choose>
+                        <c:when test="${seller.role == 'REQUESTEDSELLER'}">
+                            <span style="color: var(--accent);">Pending Approval</span>
+                        </c:when>
+                        <c:when test="${seller.role == 'SELLER'}">
+                            <span style="color: var(--success);">Approved</span>
+                        </c:when>
+                    </c:choose>
+                </td>
+                <td>
+                    <c:if test="${seller.role == 'REQUESTEDSELLER'}">
+                        <c:url value="/admin/sellers/${seller.id}/approve" var="approveUrl" />
+                        <c:url value="/admin/sellers/${seller.id}/reject" var="rejectUrl" />
+                        <a href="${approveUrl}" class="btn btn-success">
+                            <span class="material-icons">check_circle</span>
+                            Approve
+                        </a>
+                        <a href="${rejectUrl}" class="btn btn-danger" style="margin-left: 10px;">
+                            <span class="material-icons">cancel</span>
+                            Reject
+                        </a>
+                    </c:if>
+                    <c:if test="${seller.role == 'SELLER'}">
+                        <span style="color: var(--text-secondary);">Approved</span>
+                        <c:url value="/admin/sellers/${seller.id}/block" var="blockUrl" />
+                        <a href="${blockUrl}" class="btn btn-danger" style="margin-left: 10px;"
+                           onclick="return confirm('Are you sure you want to block this seller? This action cannot be undone.')">
+                            <span class="material-icons">block</span>
+                            Block
+                        </a>
+                    </c:if>
+                </td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>
     </div>
 
     <script>

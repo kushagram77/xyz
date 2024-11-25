@@ -1,52 +1,18 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
-<%@page import="java.util.List"%>
-<%@page import="java.util.ArrayList"%>
-
-<%
-    // Static data for cart items
-    class CartItem {
-        int id;
-        String name;
-        double price;
-        int quantity;
-        String image;
-
-        CartItem(int id, String name, double price, int quantity, String image) {
-            this.id = id;
-            this.name = name;
-            this.price = price;
-            this.quantity = quantity;
-            this.image = image;
-        }
-    }
-
-    List<CartItem> cartItems = new ArrayList<>();
-    cartItems.add(new CartItem(1, "Modern Wall Clock", 1299.00, 1, "/api/placeholder/100/100"));
-    cartItems.add(new CartItem(2, "Decorative Vase", 899.00, 2, "/api/placeholder/100/100"));
-    cartItems.add(new CartItem(3, "Table Lamp", 1499.00, 1, "/api/placeholder/100/100"));
-
-    // Calculate total
-    double total = 0;
-    for(CartItem item : cartItems) {
-        total += item.price * item.quantity;
-    }
-
-    request.setAttribute("cartItems", cartItems);
-    request.setAttribute("cartTotal", total);
-%>
-
+<%@taglib uri="http://www.springframework.org/tags" prefix="s" %>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 <html data-theme="light">
 <head>
     <meta charset="UTF-8">
     <title>Shopping Cart - Online Home Decor</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-
     <style>
         /* Root variables */
         :root[data-theme="light"] {
@@ -102,7 +68,7 @@
             padding-top: var(--navbar-height);
         }
 
-        /* Navbar styles */
+        /* Navbar styles (same as product_list.jsp) */
         .navbar {
             background: var(--header-bg) !important;
             position: fixed;
@@ -114,104 +80,74 @@
             padding: 0 !important;
         }
 
-        .navbar-brand {
-            color: white !important;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-link {
-            color: white !important;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px !important;
-            transition: background-color 0.3s;
-        }
-
-        .theme-toggle {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 8px var(--shadow);
-            transition: transform 0.3s ease;
-        }
-
-        /* Cart styles */
+        /* Cart specific styles */
         .cart-container {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 24px;
-            box-shadow: 0 4px 12px var(--shadow);
-            border: 1px solid var(--border);
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .cart-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
         }
 
         .cart-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            gap: 16px;
+            gap: 1.5rem;
+            transition: transform 0.3s ease;
         }
 
-        .cart-item:last-child {
-            border-bottom: none;
+        .cart-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
-        .item-image {
+        .cart-item-image {
             width: 100px;
             height: 100px;
             object-fit: cover;
             border-radius: 8px;
         }
 
-        .item-details {
+        .cart-item-details {
             flex-grow: 1;
         }
 
-        .item-name {
-            color: var(--text-primary);
+        .cart-item-title {
+            font-family: 'Poppins', sans-serif;
             font-weight: 600;
-            margin-bottom: 4px;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
         }
 
-        .item-price {
+        .cart-item-price {
             color: var(--primary);
             font-weight: 600;
+            font-size: 1.1rem;
         }
 
         .quantity-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 1rem;
         }
 
         .quantity-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
             border-radius: 4px;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 4px 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .quantity-btn:hover {
-            background: var(--primary-dark);
+            color: var(--text-primary);
         }
 
         .quantity-input {
@@ -229,11 +165,8 @@
             color: white;
             border: none;
             border-radius: 4px;
-            padding: 8px;
+            padding: 8px 16px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
             transition: opacity 0.3s;
         }
 
@@ -243,303 +176,475 @@
 
         .cart-summary {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 24px;
-            box-shadow: 0 4px 12px var(--shadow);
             border: 1px solid var(--border);
-            position: sticky;
-            top: calc(var(--navbar-height) + 24px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
         }
 
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .summary-total {
-            font-size: 1.25rem;
+        .cart-total {
+            font-size: 1.5rem;
             font-weight: 600;
-            color: var(--primary);
+            color: var(--text-primary);
+            margin-bottom: 1rem;
         }
 
         .checkout-btn {
-            background: var(--success) !important;
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 8px;
             padding: 12px 24px;
             width: 100%;
-            font-weight: 600;
-            margin-top: 16px;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: opacity 0.3s;
+            transition: background-color 0.3s;
         }
 
         .checkout-btn:hover {
-            opacity: 0.9;
+            background: var(--primary-dark);
         }
 
         .empty-cart {
             text-align: center;
-            padding: 48px;
-            color: var(--text-secondary);
-        }
-
-        .continue-shopping {
-            color: var(--primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 24px;
-            font-weight: 500;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 24px;
+            padding: 3rem;
             background: var(--card-bg);
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .empty-cart-icon {
+            font-size: 4rem;
             color: var(--text-secondary);
-            position: relative;
-            margin-top: 40px;
-            border-top: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: calc(var(--navbar-height) + 20px);
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            color: white;
+            display: none;
+            z-index: 1000;
+            background: var(--success);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+
+        .custom-nav-btn {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                margin: 0 8px;
+                padding: 8px 16px !important;
+                transition: all 0.3s ease;
+                color: white !important;
+                font-weight: 500;
+            }
+
+            .custom-nav-btn:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .custom-nav-btn .material-icons {
+                font-size: 20px;
+            }
+
+            .theme-toggle-new {
+                background: rgba(255, 255, 255, 0.1);
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                border-radius: 12px;
+                width: 44px;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                padding: 0;
+                margin-left: 16px;
+            }
+
+            .theme-toggle-new:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .theme-toggle-new .material-icons {
+                color: white;
+                font-size: 20px;
+                transition: transform 0.3s ease;
+            }
+
+            .theme-toggle-new:hover .material-icons {
+                transform: rotate(180deg);
+            }
+
+            .header-controls {
+                display: flex;
+                align-items: center;
+            }
+
+            @media (max-width: 768px) {
+                .custom-nav-btn {
+                    margin: 4px 0;
+                }
+
+                .nav-and-controls {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .header-controls {
+                    margin-top: 8px;
+                    width: 100%;
+                    justify-content: flex-end;
+                }
+
+                .theme-toggle-new {
+                    margin-left: 0;
+                }
+            }
+
+
+    </style>
+
+    <style>
+        .notification {
+            position: fixed;
+            top: calc(var(--navbar-height) + 20px);
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 12px var(--shadow);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            background-color: var(--success);
+        }
+
+        .notification.error {
+            background-color: var(--error);
         }
     </style>
+
+
 </head>
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/admin/dashboard">
+            <a class="navbar-brand" href="/OHDSpring/products">
                 <span class="material-icons">shopping_bag</span>
-                Shopping Cart
+                Online Home Decor
             </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="nav-and-controls d-flex align-items-center">
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="/OHDSpring/index">
+                            <a class="nav-link custom-nav-btn" href="/OHDSpring/products/list">
+                                <span class="material-icons">dashboard</span>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link custom-nav-btn" href="/OHDSpring/index">
                                 <span class="material-icons">logout</span>
                                 Logout
                             </a>
                         </li>
                     </ul>
                 </div>
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                    <span class="material-icons">dark_mode</span>
-                </button>
-            </div>
+                 <div class="header-controls">
+                        <button class="theme-toggle-new" onclick="toggleTheme()" aria-label="Toggle theme">
+                            <span class="material-icons">dark_mode</span>
+                        </button>
+                    </div>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="cart-container">
-                    <h2 class="mb-4">Shopping Cart</h2>
-                    <c:choose>
-                        <c:when test="${empty cartItems}">
-                            <div class="empty-cart">
-                                <span class="material-icons" style="font-size: 48px; margin-bottom: 16px;">shopping_cart</span>
-                                <h3>Your cart is empty</h3>
-                                <p>Add some products to your cart and they will show up here</p>
-                                <a href="/OHDSpring/products" class="continue-shopping">
-                                    <span class="material-icons">arrow_back</span>
-                                    Continue Shopping
-                                </a>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <c:forEach items="${cartItems}" var="item">
-                                <div class="cart-item">
-                                    <img src="${item.product.imagePath}" alt="${item.product.name}" class="item-image">
-                                    <div class="item-details">
-                                        <h3 class="item-name">Curtain</h3>
-                                        <div class="item-price">782</div>
-                                    </div>
-                                    <div class="quantity-controls">
-                                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
-                                        <input type="number" class="quantity-input" value="${item.quantity}"
-                                               onchange="updateQuantity(${item.id}, this.value)" min="1">
-                                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
-                                    </div>
-                                    <button class="remove-btn" onclick="removeItem(${item.id})">
-                                        <span class="material-icons">delete</span>
-                                        Remove
-                                    </button>
-                                </div>
-                            </c:forEach>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="cart-summary">
-                    <h3 class="mb-4">Order Summary</h3>
-                    <div class="summary-row">
-                        <span>Subtotal</span>
-                        <span>₹782</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Shipping</span>
-                        <span>₹0.00</span>
-                    </div>
-                    <hr>
-                    <div class="summary-row summary-total">
-                        <span>Total</span>
-                        <span>782</span>
-                    </div>
-                    <button class="checkout-btn" onclick="proceedToCheckout()">
-                        Proceed to Checkout
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="notification" id="notification"></div>
 
-    <footer class="footer">
-        © 2024-2025 Copyrights by Yash Technologies | All Rights Reserved
-    </footer>
+    <div class="cart-container">
+        <h1 class="cart-title">Shopping Cart</h1>
+
+        <c:choose>
+            <c:when test="${empty cartItems}">
+                <div class="empty-cart">
+                    <span class="material-icons empty-cart-icon">shopping_cart</span>
+                    <h2>Your cart is empty</h2>
+                    <p>Looks like you haven't added any items to your cart yet.</p>
+                    <a href="/OHDSpring/products" class="btn btn-primary mt-3">Continue Shopping</a>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="cart-items">
+                    <c:forEach items="${cartItems}" var="item">
+                        <div class="cart-item" data-item-id="${item.id}">
+                            <c:choose>
+                                <c:when test="${not empty item.product.image}">
+                                    <img src="<s:url value='/products/image/${product.id}'/>"
+                                         alt="${item.product.name}"
+                                         class="cart-item-image"
+                                         onerror="handleImageError(this)" />
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="image-placeholder cart-item-image">
+                                        <span class="material-icons">image</span>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">${item.product.name}</h3>
+                                <p class="cart-item-price">₹${item.product.price}</p>
+                            </div>
+
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                                <input type="number" class="quantity-input" value="${item.quantity}"
+                                       min="1" onchange="updateQuantity(${item.id}, this.value)">
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                            </div>
+
+                            <button class="remove-btn" onclick="removeItem(${item.id})">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                    </c:forEach>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="cart-total">Total: ₹${cartTotal}</div>
+                    <form action="${pageContext.request.contextPath}/checkout" method="POST" id="checkoutForm">
+                        <input type="hidden" name="amount" value="${cartTotal}">
+                        <button type="button" class="checkout-btn" onclick="proceedToCheckout()">
+                            Proceed to Checkout
+                        </button>
+                    </form>
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
     <script>
-            // Initialize theme on page load
-            document.addEventListener('DOMContentLoaded', () => {
-                const savedTheme = localStorage.getItem('theme') || 'light';
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                const icon = document.querySelector('.theme-toggle .material-icons');
-                icon.textContent = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
+        function showNotification(message, type) {
+            const notification = $("#notification");
+            notification.text(message)
+                       .removeClass("success error")
+                       .addClass(type)
+                       .fadeIn();
+
+            setTimeout(() => notification.fadeOut(), 3000);
+        }
+
+        function updateQuantity(cartItemId, change) {
+            let input = document.querySelector(`[data-item-id="${cartItemId}"] .quantity-input`);
+            let newQuantity;
+
+            if (typeof change === "string") {
+                newQuantity = parseInt(change);
+            } else {
+                newQuantity = parseInt(input.value) + change;
+            }
+
+            if (newQuantity < 1) newQuantity = 1;
+
+            $.ajax({
+                url: 'cart/update',
+                method: 'POST',
+                data: {
+                    cartItemId: cartItemId,
+                    quantity: newQuantity
+                },
+                success: function() {
+                    input.value = newQuantity;
+                    location.reload(); // Reload to update total
+                    showNotification("Cart updated successfully", "success");
+                },
+                error: function() {
+                    showNotification("Failed to update cart", "error");
+                }
             });
+        }
 
-            function toggleTheme() {
-                const html = document.documentElement;
-                const theme = html.getAttribute('data-theme');
-                const newTheme = theme === 'light' ? 'dark' : 'light';
-                html.setAttribute('data-theme', newTheme);
+        function removeItem(cartItemId) {
+            $.ajax({
+                url: 'cart/remove',
+                method: 'POST',
+                data: { cartItemId: cartItemId },
+                success: function() {
+                    $(`[data-item-id="${cartItemId}"]`).fadeOut(() => {
+                        location.reload(); // Reload to update cart status
+                    });
+                    showNotification("Item removed from cart", "success");
+                },
+                error: function() {
+                    showNotification("Failed to remove item", "error");
+                }
+            });
+        }
 
-                const icon = document.querySelector('.theme-toggle .material-icons');
-                icon.textContent = newTheme === 'light' ? 'dark_mode' : 'light_mode';
 
-                localStorage.setItem('theme', newTheme);
-            }
+    function proceedToCheckout() {
+        const amount = ${cartTotal};
 
-            function updateQuantity(itemId, quantity) {
-                if (quantity < 1) return;
+        // First create order on server
+        $.ajax({
+            url: '${pageContext.request.contextPath}/create-order',
+            method: 'GET',
+            data: {
+                amount: amount
+            },
+            success: function(response) {
+                console.log("Order created successfully:", response);
 
-                $.ajax({
-                    url: '/api/cart/update',
-                    method: 'POST',
-                    data: {
-                        itemId: itemId,
-                        quantity: quantity
+                // Initialize Razorpay payment
+                var options = {
+                    key: 'rzp_test_BZSOgBnXQoiSLs',
+                    amount: amount * 100, // amount in paisa
+                    currency: 'INR',
+                    name: 'Online Home Decor',
+                    description: 'Purchase Payment',
+                    order_id: response.orderId,
+                    handler: function(paymentResponse) {
+                        verifyPayment(paymentResponse);
                     },
-                    success: function(response) {
-                        // Refresh the page to show updated cart
-                        window.location.reload();
+                    prefill: {
+                        name: '${sessionScope.user.name}',
+                        email: '${sessionScope.user.email}',
+                        contact: ''
                     },
-                    error: function(xhr, status, error) {
-                        alert('Failed to update quantity. Please try again.');
+                    theme: {
+                        color: '#7C3AED'
                     }
-                });
-            }
+                };
 
-            function removeItem(itemId) {
-                if (!confirm('Are you sure you want to remove this item from your cart?')) {
-                    return;
+                var rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', function(failureResponse) {
+                    console.error("Payment failed:", failureResponse);
+                    showNotification("Payment failed! " + failureResponse.error.description, "error");
+                });
+                rzp1.open();
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to create order:", error);
+                console.error("Response:", xhr.responseText);
+                showNotification("Failed to create order: " + (xhr.responseJSON?.error || error), "error");
+            }
+        });
+    }
+
+    function verifyPayment(response) {
+        console.log("Verifying payment:", response);
+
+        $.ajax({
+            url: '${pageContext.request.contextPath}/verify',
+            method: 'POST',
+            data: {
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature
+            },
+            success: function(result) {
+                console.log("Payment verification successful:", result);
+                showNotification("Payment successful!", "success");
+                // Clear cart and redirect to success page
+                setTimeout(function() {
+                    window.location.href = '${pageContext.request.contextPath}/payment-success';
+                }, 2000);
+            },
+            error: function(xhr, status, error) {
+                console.error("Payment verification failed:", error);
+                console.error("Response:", xhr.responseText);
+                showNotification("Payment verification failed!", "error");
+            }
+        });
+    }
+
+    function showNotification(message, type) {
+        const notification = $("#notification");
+        notification.text(message)
+                   .removeClass("success error")
+                   .addClass(type)
+                   .fadeIn();
+
+        console.log(`${type} notification: ${message}`);
+        setTimeout(() => notification.fadeOut(), 3000);
+    }
+    // Enhance your existing showNotification function
+    function showNotification(message, type) {
+        const notification = $("#notification");
+        notification.text(message)
+                   .css('background-color', type === 'success' ? 'var(--success)' : 'var(--error)')
+                   .fadeIn();
+
+        setTimeout(() => notification.fadeOut(), 3000);
+    }
+
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const theme = html.getAttribute('data-theme');
+            const newTheme = theme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+
+            const icon = document.querySelector('.theme-toggle .material-icons');
+            icon.textContent = newTheme === 'light' ? 'dark_mode' : 'light_mode';
+
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function handleImageError(img) {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'image-placeholder';
+                    placeholder.innerHTML = '<span class="material-icons">image</span>';
+                    img.parentElement.replaceChild(placeholder, img);
                 }
 
-                $.ajax({
-                    url: '/api/cart/remove',
-                    method: 'POST',
-                    data: {
-                        itemId: itemId
-                    },
-                    success: function(response) {
-                        // Remove the item from DOM and update total
-                        const itemElement = document.querySelector(`.cart-item[data-id="${itemId}"]`);
-                        if (itemElement) {
-                            itemElement.remove();
-                            updateCartTotal();
+                // Set initial theme on page load
+                document.addEventListener('DOMContentLoaded', function() {
+                    const savedTheme = localStorage.getItem('theme') || 'light';
+                    document.documentElement.setAttribute('data-theme', savedTheme);
+                    const icon = document.querySelector('.theme-toggle .material-icons');
+                    icon.textContent = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
+                });
+
+                // Add input validation for quantity
+                document.querySelectorAll('.quantity-input').forEach(input => {
+                    input.addEventListener('input', function() {
+                        let value = parseInt(this.value);
+                        if (isNaN(value) || value < 1) {
+                            this.value = 1;
                         }
-
-                        // If cart becomes empty, show empty cart message
-                        const cartItems = document.querySelectorAll('.cart-item');
-                        if (cartItems.length === 0) {
-                            const cartContainer = document.querySelector('.cart-container');
-                            cartContainer.innerHTML = `
-                                <div class="empty-cart">
-                                    <span class="material-icons" style="font-size: 48px; margin-bottom: 16px;">shopping_cart</span>
-                                    <h3>Your cart is empty</h3>
-                                    <p>Add some products to your cart and they will show up here</p>
-                                    <a href="/OHDSpring/products" class="continue-shopping">
-                                        <span class="material-icons">arrow_back</span>
-                                        Continue Shopping
-                                    </a>
-                                </div>
-                            `;
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Failed to remove item. Please try again.');
-                    }
+                    });
                 });
-            }
-
-            function updateCartTotal() {
-                let total = 0;
-                document.querySelectorAll('.cart-item').forEach(item => {
-                    const price = parseFloat(item.querySelector('.item-price').textContent.replace('₹', ''));
-                    const quantity = parseInt(item.querySelector('.quantity-input').value);
-                    total += price * quantity;
-                });
-
-                // Update subtotal and total in summary
-                const subtotalElement = document.querySelector('.summary-row:first-child span:last-child');
-                const totalElement = document.querySelector('.summary-total span:last-child');
-
-                if (subtotalElement && totalElement) {
-                    subtotalElement.textContent = `₹${total.toFixed(2)}`;
-                    totalElement.textContent = `₹${total.toFixed(2)}`;
-                }
-            }
-
-            function proceedToCheckout() {
-                // Check if cart is not empty
-                const cartItems = document.querySelectorAll('.cart-item');
-                if (cartItems.length === 0) {
-                    alert('Your cart is empty. Please add items before checking out.');
-                    return;
-                }
-
-                // Redirect to checkout page
-                window.location.href = '/OHDSpring/checkout';
-            }
-
-            // Add input validation for quantity
-            document.querySelectorAll('.quantity-input').forEach(input => {
-                input.addEventListener('input', function() {
-                    const value = parseInt(this.value);
-                    if (isNaN(value) || value < 1) {
-                        this.value = 1;
-                    }
-                });
-            });
-
-            // Prevent form submission on enter key in quantity input
-            document.querySelectorAll('.quantity-input').forEach(input => {
-                input.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        this.blur();
-                    }
-                });
-            });
-        </script>
-
- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+            </script>
+        </body>
+        </html>

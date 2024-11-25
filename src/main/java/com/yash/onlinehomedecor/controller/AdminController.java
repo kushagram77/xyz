@@ -4,6 +4,7 @@ package com.yash.onlinehomedecor.controller;
 
 import com.yash.onlinehomedecor.domain.Product;
 import com.yash.onlinehomedecor.domain.User;
+import com.yash.onlinehomedecor.enums.UserRole;
 import com.yash.onlinehomedecor.service.AdminService;
 import com.yash.onlinehomedecor.service.ProductService;
 import com.yash.onlinehomedecor.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -46,15 +48,48 @@ public class AdminController {
         return "manage-sellers";
     }
 
-    @PostMapping("/admin/sellers/{id}/approve")
-    public String approveSeller(@PathVariable Integer id) {
-        adminService.approveSeller(id);
-        return "redirect:/admin/sellers";
+//    @PostMapping("/admin/sellers/{id}/approve")
+//    public String approveSeller(@PathVariable Integer id) {
+//        adminService.approveSeller(id);
+//        return "redirect:/admin/sellers";
+//    }
+//
+//    @PostMapping("/admin/sellers/{id}/reject")
+//    public String rejectSeller(@PathVariable Integer id) {
+//        adminService.rejectSeller(id);
+//        return "redirect:/admin/sellers";
+//    }
+@RequestMapping(value = "/sellers/{id}/approve", method = RequestMethod.GET)
+public String approveSeller(@PathVariable("id") int sellerId, RedirectAttributes redirectAttributes) {
+    try {
+        User seller = userService.findById(sellerId);
+        if (seller != null && seller.getRole() == UserRole.REQUESTEDSELLER) {
+            seller.setRole(UserRole.SELLER);
+            userService.update(seller);
+            redirectAttributes.addFlashAttribute("successMessage", "Seller approved successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid seller or seller already approved.");
+        }
+    } catch (Exception e) {
+        redirectAttributes.addFlashAttribute("errorMessage", "Error approving seller: " + e.getMessage());
     }
+    return "redirect:/admin/sellers";
+}
 
-    @PostMapping("/admin/sellers/{id}/reject")
-    public String rejectSeller(@PathVariable Integer id) {
-        adminService.rejectSeller(id);
+    @RequestMapping(value = "/sellers/{id}/reject", method = RequestMethod.GET)
+    public String rejectSeller(@PathVariable("id") int sellerId, RedirectAttributes redirectAttributes) {
+        try {
+            User seller = userService.findById(sellerId);
+            if (seller != null) {
+                // You might want to either delete the user or keep them with a REJECTED status
+                userService.delete(sellerId);
+                redirectAttributes.addFlashAttribute("successMessage", "Seller rejected successfully!");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Invalid seller.");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error rejecting seller: " + e.getMessage());
+        }
         return "redirect:/admin/sellers";
     }
 
@@ -63,6 +98,18 @@ public class AdminController {
 
        userService.blockUser(id);
         return "redirect:/admin/buyers";
+    }
+
+    @RequestMapping("/sellers/{id}/block")
+    public String blockSekller(@PathVariable Integer id,RedirectAttributes redirectAttributes ) {
+        try {
+            userService.blockUser(id);
+
+        }catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error rejecting seller: " + e.getMessage());
+        }
+
+        return "redirect:/admin/sellers";
     }
 
 
@@ -77,6 +124,36 @@ public class AdminController {
         model.addAttribute("products", products);
         return "manage_products";
     }
+
+    @GetMapping("/products/{id}/edit")
+    public String showEditProductForm(@PathVariable int id, Model model) {
+        Product product = productService.getProductById(id);
+        model.addAttribute("product", product);
+        model.addAttribute("categories", productService.getAllProductCategories());
+        model.addAttribute("shops", productService.getAllShops());
+        return "edit_products_admin";
+    }
+
+
+
+    @PostMapping("/products/{id}/edit")
+    public String updateProduct(@PathVariable int id, @ModelAttribute Product product,
+                              /*  @RequestParam("productImage") MultipartFile file,
+                                @RequestParam("available") boolean available,*/
+                                RedirectAttributes redirectAttributes) {
+        product.setId(id);
+//            product.setImage(file.getBytes());
+//            product.setAvailable(available);
+        productService.updateProduct(product);
+        redirectAttributes.addFlashAttribute("message", "Product updated successfully.");
+        redirectAttributes.addFlashAttribute("messageType", "success");
+        //return "dashboard_seller";
+        return "redirect:/admin/dashboard";
+
+    }
+
+
+
     @RequestMapping(value = "/profile")
     public String sellerProfile(Model model, HttpSession session) {
         // Get the logged-in user from the session
@@ -125,7 +202,7 @@ public class AdminController {
 
     @RequestMapping(value = "/notifications")
     String notificationsSeller(){
-        return "seller_notifications";
+        return "admin_notifications";
     }
 
 

@@ -48,7 +48,7 @@ public class ProductController  {
 
 
     // Update existing listProducts method to include image URLs
-    @GetMapping
+    @GetMapping("/list")
     public String listProducts(Model model) {
         try {
             List<Product> products = productService.getAllProducts();
@@ -137,8 +137,8 @@ public class ProductController  {
             redirectAttributes.addFlashAttribute("message", "Failed to process image.");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        //return "redirect:/products/add";
-        return "dashboard_seller";
+        return "redirect:/products/add";
+        //return "dashboard_seller";
     }
 
 //    @GetMapping
@@ -175,7 +175,8 @@ public class ProductController  {
         productService.updateProduct(product);
         redirectAttributes.addFlashAttribute("message", "Product updated successfully.");
         redirectAttributes.addFlashAttribute("messageType", "success");
-        return "dashboard_seller";
+        //return "dashboard_seller";
+        return "redirect:/products/seller";
 
     }
 

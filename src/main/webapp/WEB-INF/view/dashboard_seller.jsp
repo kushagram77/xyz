@@ -298,7 +298,7 @@
                 </a>
             </div>
 
-            <div class="dashboard-card">
+         <!---   <div class="dashboard-card">
                 <h5>Monthly Profits</h5>
                 <div class="stat">₹${monthlyProfit}</div>
                 <p>View detailed sales analytics</p>
@@ -306,7 +306,7 @@
                     <span class="material-icons">analytics</span>
                     View Analytics
                 </a>
-            </div>
+            </div> ----!>
 
             <div class="dashboard-card">
                 <h5>Orders</h5>

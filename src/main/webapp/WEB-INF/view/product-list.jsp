@@ -341,6 +341,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
+
+    <%
+    		if(session.getAttribute("userId")==null)
+    		{
+    			response.sendRedirect("/OHDSpring/index");
+    		}
+
+    	 %>
+
+
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/admin/dashboard">
@@ -395,7 +405,8 @@
                             <c:choose>
                                 <c:when test="${not empty product.image}">
                                     <img
-                                        src="product.image"
+
+                                        src="<s:url value='/products/image/${product.id}'/>"
                                         alt="${product.name}"
                                         class="product-image"
                                         onload="handleImageLoad(this)"
@@ -455,42 +466,65 @@
             localStorage.setItem('theme', newTheme);
         }
 
-        $(document).ready(function() {
-            // Set initial theme
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            const icon = document.querySelector('.theme-toggle .material-icons');
-            icon.textContent = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
+       $(document).ready(function() {
+           // Set initial theme
+           const savedTheme = localStorage.getItem('theme') || 'light';
+           document.documentElement.setAttribute('data-theme', savedTheme);
+           const icon = document.querySelector('.theme-toggle .material-icons');
+           icon.textContent = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
 
-            // Add to cart functionality
-            $('.add-to-cart-btn').click(function() {
-                var productId = $(this).data('product-id');
-                var productName = $(this).data('product-name');
+           // Add to cart functionality
+           $('.add-to-cart-btn').click(function() {
+               var productId = $(this).data('product-id');
+               var productName = $(this).data('product-name');
 
-                $.ajax({
-                    url: 'cart/add',
-                    contentType: 'application/json',
-                    data: {productId},
-                    success: function(response) {
-                        showNotification(`${productName} added to cart successfully!`, 'success');
-                        updateCartCount();
-                    }
-                });
-            });
+               $.ajax({
+                   url: '${pageContext.request.contextPath}/cart/add',  // Updated URL
+                   method: 'POST',  // Explicitly set the method
+                   data: {productId: productId},
+                   success: function(response) {
+                       showNotification(`${productName} added to cart successfully!`, 'success');
+                       updateCartCount();
+                   },
+                   error: function(xhr, status, error) {
+                       console.error('Error adding to cart:', error);
+                       showNotification('Failed to add item to cart', 'error');
+                   }
+               });
+           });
 
-            // Function to update cart count
-            function updateCartCount() {
-                $.ajax({
-                    url: 'cart/count',
-                    success: function(response) {
-                        $('.cart-count').text(response);
-                    }
-                });
-            }
+           // Function to update cart count
+           function updateCartCount() {
+               $.ajax({
+                   url: '${pageContext.request.contextPath}/cart/count',  // Updated URL
+                   method: 'GET',  // Explicitly set the method
+                   success: function(response) {
+                       $('.cart-count').text(response);
+                   },
+                   error: function(xhr, status, error) {
+                       console.error('Error updating cart count:', error);
+                   }
+               });
+           }
 
-            // Initial cart count update
-            updateCartCount();
-        });
+           // Initial cart count update
+           updateCartCount();
+       });
+
+       // Notification function
+       function showNotification(message, type) {
+           var notification = $("#notification");
+           notification
+               .css('background-color', type === 'success' ? 'var(--success)' : 'var(--error)')
+               .text(message)
+               .fadeIn();
+
+           setTimeout(function() {
+               notification.fadeOut();
+           }, 3000);
+       }
+
+
     </script>
 
     <!-- script for handling image errors -->

@@ -75,7 +75,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Integer getCartItemCount(Integer userId) {
-        return 108;
+        return cartDAO.getCartItemCount(userId);
     }
 
 

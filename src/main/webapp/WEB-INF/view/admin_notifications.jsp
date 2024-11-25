@@ -1,16 +1,18 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="s" %>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 <html data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Online Home Decor</title>
-    <!-- Material Icons -->
+    <title>Seller Notifications - Online Home Decor</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <style>
+        /* Reusing the entire CSS from dashboard.jsp */
         :root[data-theme="light"] {
             --primary: #7C3AED;
             --primary-dark: #6D28D9;
@@ -99,33 +101,28 @@
         }
 
         .header-controls {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-                .header .nav-btn {
-                    color: white;
-                    text-decoration: none;
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    padding: 0.5rem 1rem;
-                    border-radius: 8px;
-                    transition: background-color 0.3s;
-                    font-weight: 500;
-                }
+        .header .nav-btn {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
 
-                .header .nav-btn:hover {
-                    background: rgba(255, 255, 255, 0.1);
-                }
-
-
-
-
+        .header .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
 
         .theme-toggle {
-            position: static;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
@@ -135,8 +132,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s;
-            z-index: 1001;
+            transition: transform 0.3s ease;
         }
 
         .theme-toggle:hover {
@@ -161,48 +157,64 @@
             font-family: 'Poppins', sans-serif;
             font-size: 2rem;
             margin-bottom: 2rem;
-            color: var(--primary);
             background: linear-gradient(120deg, var(--primary) 0%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: fadeInScale 0.8s ease-out;
         }
 
-        .dashboard-grid {
+        .notification-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: 1rem;
         }
 
-        .dashboard-card {
+        .notification-card {
             background: var(--card-bg);
             border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
+            padding: 1.5rem;
             border: 1px solid var(--border);
             box-shadow: 0 4px 6px var(--shadow);
             transition: transform 0.3s, box-shadow 0.3s;
-            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .dashboard-card:hover {
+        .notification-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 15px var(--shadow);
         }
 
-        .dashboard-card h5 {
+        .notification-icon {
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+        }
+
+        .notification-content h4 {
             color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-family: 'Poppins', sans-serif;
+            margin-bottom: 0.5rem;
         }
 
-        .dashboard-card p {
+        .notification-content p {
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
         }
 
-        .dashboard-card .btn {
+        .notification-time {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .back-btn {
             background: var(--primary);
             color: white;
             padding: 0.75rem 1.5rem;
@@ -213,9 +225,10 @@
             gap: 0.5rem;
             transition: all 0.3s ease;
             font-weight: 500;
+            margin-bottom: 1rem;
         }
 
-        .dashboard-card .btn:hover {
+        .back-btn:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
@@ -227,9 +240,6 @@
         }
 
         @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
             .header h1 {
                 font-size: 1.2rem;
             }
@@ -242,7 +252,7 @@
             .header-controls {
                 gap: 0.5rem;
             }
-            .logout-btn span:not(.material-icons) {
+            .nav-btn span:not(.material-icons) {
                 display: none;
             }
         }
@@ -250,92 +260,94 @@
 </head>
 <body>
     <header class="header">
-            <h1>
+        <h1>
+            <span class="material-icons">store</span>
+            Online Home Decor
+        </h1>
+        <div class="header-controls">
+            <a href="/OHDSpring/xyz" class="nav-btn">
                 <span class="material-icons">dashboard</span>
-                Admin Dashboard
-            </h1>
-            <div class="header-controls">
-                <a href="/OHDSpring/admin/notifications" class="nav-btn">
-                    <span class="material-icons">notifications</span>
-                    <span>Notifications</span>
-                </a>
-                <a href="/OHDSpring/admin/profile" class="nav-btn">
-                    <span class="material-icons">account_circle</span>
-                    <span>Profile</span>
-                </a>
-                <a href="/OHDSpring/admin/dashboard" class="nav-btn">
-                    <span class="material-icons">dashboard</span>
-                    <span>Dashboard</span>
-                </a>
-                <a href="/OHDSpring/index" class="nav-btn">
-                    <span class="material-icons">logout</span>
-                    <span>Logout</span>
-                </a>
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                    <span class="material-icons">dark_mode</span>
-                </button>
-            </div>
-        </header>
+                <span>Back to Dashboard</span>
+            </a>
+            <a href="/OHDSpring/seller/profile" class="nav-btn">
+                <span class="material-icons">account_circle</span>
+                <span>Profile</span>
+            </a>
+            <a href="/OHDSpring/index" class="nav-btn">
+                <span class="material-icons">logout</span>
+                <span>Logout</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <span class="material-icons">dark_mode</span>
+            </button>
+        </div>
+    </header>
 
     <div class="dashboard-container">
-        <h2 class="welcome-title">Welcome <% out.print(session.getAttribute("name")); %></h2>
+        <h2 class="welcome-title">Heyyyyy,Dhyan Do ....</h2>
 
-        <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <h5>Manage Buyers</h5>
-                <p>View and manage all registered buyers</p>
-                <a href="admin/buyers" class="btn">
-                    <span class="material-icons">people</span>
-                    View Buyers
-                </a>
+
+
+        <div class="notification-list">
+            <div class="notification-card">
+                <div class="notification-icon">
+                    <span class="material-icons">shopping_cart</span>
+                </div>
+                <div class="notification-content">
+                    <h4>New Order Received</h4>
+                    <p>Boom in demand for curatains!!!!!</p>
+                </div>
+                <div class="notification-time">2 hours ago</div>
             </div>
 
-            <div class="dashboard-card">
-                <h5>Manage Sellers</h5>
-                <p>Approve or reject seller applications</p>
-                <a href="admin/sellers" class="btn">
-                    <span class="material-icons">store</span>
-                    View Sellers
-                </a>
-            </div>
-
-            <div class="dashboard-card">
-                <h5>Manage Products</h5>
-                <p>View and manage all products</p>
-                <a href="admin/products" class="btn">
+            <div class="notification-card">
+                <div class="notification-icon">
                     <span class="material-icons">inventory</span>
-                    View Products
-                </a>
+                </div>
+                <div class="notification-content">
+                    <h4>Low Stock Alert!SOFA COVER on low stock!</h4>
+                    <p>Decorative Throw Pillows are running low on inventory</p>
+                </div>
+                <div class="notification-time">5 hours ago</div>
             </div>
 
-            <div class="dashboard-card">
-                <h5>Manage Feedback</h5>
-                <p>View and manage customer feedback</p>
-                <a href="feedback/list" class="btn">
-                    <span class="material-icons">feedback</span>
-                    View Feedback
-                </a>
+            <div class="notification-card">
+                <div class="notification-icon">
+                    <span class="material-icons">settings</span>
+                </div>
+                <div class="notification-content">
+                    <h4>Profile Update</h4>
+                    <p>Dashboard Update coming soon</p>
+                </div>
+                <div class="notification-time">1 day ago</div>
+            </div>
+
+            <div class="notification-card">
+                <div class="notification-icon">
+                    <span class="material-icons">payments</span>
+                </div>
+                <div class="notification-content">
+                    <h4>Payment Processed</h4>
+                    <p>Monthly earnings of ₹5,00,000 have been processed</p>
+                </div>
+                <div class="notification-time">3 days ago</div>
             </div>
         </div>
     </div>
 
     <script>
-        // Theme toggle functionality
         function toggleTheme() {
             const html = document.documentElement;
             const theme = html.getAttribute('data-theme');
             const newTheme = theme === 'light' ? 'dark' : 'light';
             html.setAttribute('data-theme', newTheme);
 
-            // Update theme toggle icon
             const icon = document.querySelector('.theme-toggle .material-icons');
             icon.textContent = newTheme === 'light' ? 'dark_mode' : 'light_mode';
 
-            // Save theme preference
             localStorage.setItem('theme', newTheme);
         }
 
-        // Set initial theme based on user preference
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);

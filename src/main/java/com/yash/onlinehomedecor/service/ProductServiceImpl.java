@@ -1,4 +1,4 @@
-package com.yash.onlinehomedecor.service.impl;
+package com.yash.onlinehomedecor.service;
 
 import com.yash.onlinehomedecor.dao.ProductDAO;
 import com.yash.onlinehomedecor.domain.Product;
