@@ -399,7 +399,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
+                     <!--   <div class="form-group">
                             <label for="shop_id">
                                 <span class="material-icons">store</span>
                                 Shop ID
@@ -413,7 +413,7 @@
                                 Seller ID
                             </label>
                             <input type="number" id="seller_id" name="seller_id" required min="1" placeholder="Enter seller ID">
-                        </div>
+                        </div>  --!>
 
                         <div class="form-group">
                             <label for="productImage">

@@ -1,15 +1,15 @@
-<%@ page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page isELIgnored="false" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="s" %>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Orders - Online Home Decor</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Seller Orders - Online Home Decor</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
         <style>
             :root[data-theme="light"] {
@@ -58,346 +58,210 @@
                 background: var(--bg-primary);
                 min-height: 100vh;
                 color: var(--text-primary);
-                padding-top: 80px;
                 position: relative;
             }
 
-            body::before {
-                content: '';
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: linear-gradient(45deg,
-                    rgba(124, 58, 237, 0.1) 0%,
-                    rgba(159, 122, 234, 0.1) 100%);
-                z-index: 0;
-                pointer-events: none;
-            }
-
-            .header {
-                background: var(--header-bg);
-                padding: 1rem 2rem;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 1000;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                box-shadow: 0 2px 10px var(--shadow);
-            }
-
-            .header h1 {
-                color: white;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                font-family: 'Poppins', sans-serif;
-                font-size: 1.5rem;
-            }
-
-            .header-controls {
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-            }
-
-            .header .nav-btn {
-                color: white;
-                text-decoration: none;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                padding: 0.5rem 1rem;
-                border-radius: 8px;
-                transition: background-color 0.3s;
-                font-weight: 500;
-            }
-
-            .header .nav-btn:hover {
-                background: rgba(255, 255, 255, 0.1);
-            }
-
             .theme-toggle {
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--card-bg);
+                border: 1px solid var(--border);
                 border-radius: 50%;
-                width: 40px;
-                height: 40px;
+                width: 45px;
+                height: 45px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
+                box-shadow: 0 2px 8px var(--shadow);
+                z-index: 1000;
                 transition: transform 0.3s ease;
             }
 
-            .theme-toggle:hover {
-                transform: scale(1.1);
-                background: rgba(255, 255, 255, 0.2);
-            }
-
-            .theme-toggle .material-icons {
-                color: white;
-                font-size: 20px;
-            }
-
-            .dashboard-container {
-                max-width: 1200px;
-                margin: 2rem auto;
-                padding: 0 1rem;
+            .header {
+                background: var(--header-bg);
+                padding: 28px;
+                text-align: center;
                 position: relative;
-                z-index: 1;
+                margin-bottom: 40px;
             }
 
-            .welcome-title {
+            .header h1 {
+                color: white;
+                font-size: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
                 font-family: 'Poppins', sans-serif;
-                font-size: 2rem;
-                margin-bottom: 2rem;
-                background: linear-gradient(120deg, var(--primary) 0%, var(--accent) 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                animation: fadeInScale 0.8s ease-out;
             }
 
-            .dashboard-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                gap: 2rem;
+            .main-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
             }
 
-            .dashboard-card {
+            .orders-table {
+                width: 100%;
                 background: var(--card-bg);
                 border-radius: 16px;
-                padding: 2rem;
-                text-align: center;
-                border: 1px solid var(--border);
+                overflow: hidden;
                 box-shadow: 0 4px 6px var(--shadow);
-                transition: transform 0.3s, box-shadow 0.3s;
-                backdrop-filter: blur(10px);
+                border: 1px solid var(--border);
+                margin-bottom: 40px;
             }
 
-            .dashboard-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 15px var(--shadow);
-            }
-
-            .dashboard-card h5 {
-                color: var(--primary);
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-                font-family: 'Poppins', sans-serif;
-            }
-
-            .dashboard-card p {
-                color: var(--text-secondary);
-                margin-bottom: 1.5rem;
-            }
-
-            .dashboard-card .stat {
-                font-size: 2rem;
-                color: var(--accent);
-                margin-bottom: 1rem;
-                font-weight: bold;
-            }
-
-            .dashboard-card .btn {
+            .orders-table thead {
                 background: var(--primary);
                 color: white;
-                padding: 0.75rem 1.5rem;
-                border-radius: 8px;
-                text-decoration: none;
-                display: inline-flex;
+            }
+
+            .orders-table th {
+                padding: 16px;
+                text-align: left;
+                font-weight: 600;
+            }
+
+            .orders-table td {
+                padding: 16px;
+                border-bottom: 1px solid var(--border);
+                color: var(--text-primary);
+            }
+
+            .orders-table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .status-form {
+                display: flex;
+                gap: 12px;
                 align-items: center;
-                gap: 0.5rem;
-                transition: all 0.3s ease;
+            }
+
+            .status-select {
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid var(--border);
+                background: var(--input-bg);
+                color: var(--text-primary);
+                font-size: 14px;
+                min-width: 140px;
+            }
+
+            .update-btn {
+                padding: 8px 16px;
+                background: var(--primary);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
                 font-weight: 500;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
             }
 
-            .dashboard-card .btn:hover {
+            .update-btn:hover {
                 background: var(--primary-dark);
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+                transform: translateY(-1px);
             }
 
-            @keyframes fadeInScale {
-                0% { opacity: 0; transform: scale(0.95); }
-                100% { opacity: 1; transform: scale(1); }
+            .alert {
+                padding: 16px;
+                border-radius: 12px;
+                margin-bottom: 24px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .alert.success {
+                background: var(--success);
+                color: white;
+            }
+
+            .alert.error {
+                background: var(--error);
+                color: white;
+            }
+
+            .footer {
+                text-align: center;
+                padding: 24px;
+                color: var(--text-secondary);
+                border-top: 1px solid var(--border);
+                margin-top: 40px;
             }
 
             @media (max-width: 768px) {
-                .dashboard-grid {
-                    grid-template-columns: 1fr;
+                .orders-table {
+                    display: block;
+                    overflow-x: auto;
                 }
-                .header h1 {
-                    font-size: 1.2rem;
+
+                .status-form {
+                    flex-direction: column;
+                    align-items: stretch;
                 }
-                .welcome-title {
-                    font-size: 1.5rem;
-                }
-                .header {
-                    padding: 1rem;
-                }
-                .header-controls {
-                    gap: 0.5rem;
-                }
-                .nav-btn span:not(.material-icons) {
-                    display: none;
+
+                .status-select {
+                    width: 100%;
                 }
             }
         </style>
+    </head>
+    <body>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+            <span class="material-icons">dark_mode</span>
+        </button>
 
-    <style>
-        /* Include the same CSS variables and base styles from your dashboard */
+        <header class="header">
+            <h1>
+                <span class="material-icons">shopping_bag</span>
+                Seller Orders
+            </h1>
+        </header>
 
-        .orders-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+        <div class="main-container">
+            <c:if test="${not empty message}">
+                <div class="alert ${messageType}">
+                    <span class="material-icons">
+                        ${messageType == 'success' ? 'check_circle' : 'error'}
+                    </span>
+                    ${message}
+                </div>
+            </c:if>
 
-        .orders-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px var(--shadow);
-        }
-
-        .orders-table th,
-        .orders-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .orders-table th {
-            background: var(--primary);
-            color: white;
-            font-weight: 600;
-        }
-
-        .orders-table tr:hover {
-            background: rgba(124, 58, 237, 0.05);
-        }
-
-        .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 500;
-            text-transform: capitalize;
-        }
-
-        .status-pending {
-            background: #FEF3C7;
-            color: #92400E;
-        }
-
-        .status-processing {
-            background: #DBEAFE;
-            color: #1E40AF;
-        }
-
-        .status-shipped {
-            background: #D1FAE5;
-            color: #065F46;
-        }
-
-        .status-delivered {
-            background: #BBF7D0;
-            color: #166534;
-        }
-
-        .status-cancelled {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-
-        .action-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            border: none;
-            background: var(--primary);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .action-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        .message {
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-        }
-
-        .message.success {
-            background: var(--success);
-            color: white;
-        }
-
-        .message.error {
-            background: var(--error);
-            color: white;
-        }
-    </style>
-</head>
-<body>
-    <%@ include file="seller_orders.jsp" %>
-
-    <div class="orders-container">
-        <h2 class="welcome-title">Manage Orders</h2>
-
-        <c:if test="${not empty message}">
-            <div class="message ${messageType}">${message}</div>
-        </c:if>
-
-        <div class="orders-table-container">
             <table class="orders-table">
                 <thead>
                     <tr>
                         <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Total Price</th>
-                        <th>Order Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>Customer Name</th>
+                        <th>Order Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${orders}" var="order">
+                    <c:forEach var="order" items="${orders}">
                         <tr>
-                            <td>#${order.id}</td>
+                            <td>${order.id}</td>
                             <td>${order.customerName}</td>
-                            <td>${order.productName}</td>
-                            <td>${order.quantity}</td>
-                            <td>₹${order.price}</td>
+                            <td>${order.status}</td>
                             <td>
-                                <fmt:formatDate value="${order.orderDate}"
-                                              pattern="MMM dd, yyyy HH:mm"/>
-                            </td>
-                            <td>
-                                <span class="status-badge status-${order.status.toLowerCase()}">
-                                    ${order.status}
-                                </span>
-                            </td>
-                            <td>
-                                <form action="${pageContext.request.contextPath}/seller/orders/${order.id}/status"
-                                      method="POST" style="display: inline;">
-                                    <select name="status" onchange="this.form.submit()">
-                                        <option value="PENDING" ${order.status == 'PENDING' ? 'selected' : ''}>Pending</option>
-                                        <option value="PROCESSING" ${order.status == 'PROCESSING' ? 'selected' : ''}>Processing</option>
-                                        <option value="SHIPPED" ${order.status == 'SHIPPED' ? 'selected' : ''}>Shipped</option>
-                                        <option value="DELIVERED" ${order.status == 'DELIVERED' ? 'selected' : ''}>Delivered</option>
-                                        <option value="CANCELLED" ${order.status == 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
+                                <form action="<c:url value='/seller/orders/${order.id}/status'/>" method="post" class="status-form">
+                                    <select name="status" class="status-select">
+                                        <option value="Pending" <c:if test="${order.status == 'Pending'}">selected</c:if>>Pending</option>
+                                        <option value="Shipped" <c:if test="${order.status == 'Shipped'}">selected</c:if>>Shipped</option>
+                                        <option value="Delivered" <c:if test="${order.status == 'Delivered'}">selected</c:if>>Delivered</option>
+                                        <option value="Cancelled" <c:if test="${order.status == 'Cancelled'}">selected</c:if>>Cancelled</option>
                                     </select>
+                                    <button type="submit" class="update-btn">
+                                        <span class="material-icons">update</span>
+                                        Update Status
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -405,28 +269,30 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
+        <footer class="footer">
+            © [2024-2025] Copyrights by Yash TECHNOLOGIES | All Rights Reserved
+        </footer>
 
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const theme = html.getAttribute('data-theme');
-            const newTheme = theme === 'light' ? 'dark' : 'light';
-            html.setAttribute('data-theme', newTheme);
+        <script>
+            function toggleTheme() {
+                const html = document.documentElement;
+                const theme = html.getAttribute('data-theme');
+                const newTheme = theme === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', newTheme);
 
-            const icon = document.querySelector('.theme-toggle .material-icons');
-            icon.textContent = newTheme === 'light' ? 'dark_mode' : 'light_mode';
+                const icon = document.querySelector('.theme-toggle .material-icons');
+                icon.textContent = newTheme === 'light' ? 'dark_mode' : 'light_mode';
 
-            localStorage.setItem('theme', newTheme);
-        }
+                localStorage.setItem('theme', newTheme);
+            }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            const icon = document.querySelector('.theme-toggle .material-icons');
-            icon.textContent = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
-        });
-    </script>
-</body>
+            document.addEventListener('DOMContentLoaded', () => {
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const icon = document.querySelector('.theme-toggle .material-icons');
+                icon.textContent = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
+            });
+        </script>
+    </body>
 </html>

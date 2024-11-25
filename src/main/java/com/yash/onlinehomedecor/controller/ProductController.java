@@ -123,6 +123,8 @@ public class ProductController  {
 
                 byte[] imageData = file.getBytes();
                 product.setImage(imageData);
+               // product.setShop_id(3);
+             //   product.setSeller_id(20);
 
                 System.out.println("Image data size set to product: " + imageData.length + " bytes");
             }
