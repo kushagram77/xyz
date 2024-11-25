@@ -1,0 +1,204 @@
+use ohdspring;
+
+CREATE TABLE product_categories (    id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  created_by INT NOT NULL,
+  shop_id INT NOT NULL,
+  FOREIGN KEY (created_by) REFERENCES user(id),
+  FOREIGN KEY (shop_id) REFERENCES shops(useradminsadminsusernameusernameshopsuserid));
+
+
+  CREATE TABLE products (    id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(200) NOT NULL,
+  description TEXT,
+  price DECIMAL(10,2) NOT NULL,
+  category_id INT NOT NULL,
+  seller_id INT NOT NULL,
+  shop_id INT NOT NULL,
+  FOREIGN KEY (category_id) REFERENCES product_categories(id),
+  FOREIGN KEY (seller_id) REFERENCES user(id),
+  FOREIGN KEY (shop_id) REFERENCES shops(id)
+  );
+
+  CREATE TABLE shops (  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  shop_name VARCHAR(200) NOT NULL,
+  shop_description TEXT,
+  address_line1 VARCHAR(255) NOT NULL,
+  city VARCHAR(100) NOT NULL,
+  state VARCHAR(100) NOT NULL,
+  postal_code VARCHAR(20) NOT NULL,
+  contact_phone VARCHAR(20) NOT NULL,
+  business_registration_number VARCHAR(100),
+  status ENUM('pending', 'active', 'suspended') DEFAULT 'pending',
+  FOREIGN KEY (user_id) REFERENCES user(id)
+  );
+ALTER TABLE user
+DROP COLUMN role,
+ADD COLUMN role ENUM('buyer', 'seller') NOT NULL AFTER password;
+
+INSERT INTO product_categories (name, created_by, shop_id)
+VALUES
+('Electronics', 20, 3),
+('Apparel', 21, 5),
+('Home Decor', 20, 6);
+INSERT INTO products (name, description, price, category_id, seller_id, shop_id)
+VALUES
+('iPhone 13', 'Latest model of iPhone', 799.99, 19, 20, 3),
+('Cotton T-Shirt', 'Soft and comfortable t-shirt', 19.99, 20, 22, 5),
+('Throw Pillow', 'Decorative pillow for living room', 24.99, 21, 20, 6);
+INSERT INTO products (name, description, price, category_id, seller_id, shop_id)
+VALUES
+('furniture', 'Elegant furniture for living room', 24.99, 21, 20, 6);
+INSERT INTO shops (user_id, shop_name, shop_description, address_line1, city, state, postal_code, contact_phone, business_registration_number)
+VALUES
+(20, 'Electronics Emporium', 'Shop for all your electronic needs', 'Indore', 'Indore', 'MP', '452010', '1234567890', 'ABC123'),
+(21, 'Fashion Boutique', 'Stylish apparel and accessories', 'Indore', 'Indore', 'MP', '452010', '0987654321', 'XYZ456');
+
+
+
+-- Cart table to store user's shopping cart
+CREATE TABLE cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    status ENUM('active', 'checkout', 'abandoned') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+-- Cart items to store products in cart
+CREATE TABLE cart_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    price DECIMAL(10,2) NOT NULL,  -- Store price at time of adding to cart
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (cart_id) REFERENCES cart(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Cart transaction history (for order history)
+CREATE TABLE cart_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT NOT NULL,
+    user_id INT NOT NULL,
+    total_amount DECIMAL(10,2) NOT NULL,
+    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    shipping_address VARCHAR(255) NOT NULL,
+    payment_status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
+    FOREIGN KEY (cart_id) REFERENCES cart(id),
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+-- Indexes for better query performance
+CREATE INDEX idx_cart_user ON cart(user_id);
+CREATE INDEX idx_cart_items_cart ON cart_items(cart_id);
+CREATE INDEX idx_cart_items_product ON cart_items(product_id);
+CREATE INDEX idx_cart_history_user ON cart_history(user_id);
+
+-- Add image column to products table
+ALTER TABLE products
+ADD COLUMN image_path VARCHAR(255) AFTER description;
+
+select * from user;
+SELECT * FROM  products;
+select * from cart_items;
+select * from cart;
+
+ALTER TABLE shops
+MODIFY COLUMN status ENUM('PENDING', 'ACTIVE', 'SUSPENDED') DEFAULT 'PENDING';
+
+ALTER TABLE products MODIFY COLUMN image_path MEDIUMBLOB;
+
+CREATE TABLE feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    subject ENUM('general', 'product', 'order', 'technical', 'other') NOT NULL,
+    message TEXT NOT NULL,
+    status ENUM('pending', 'in_progress', 'resolved') DEFAULT 'pending');
+-- Create index for better query performance
+CREATE INDEX idx_feedback_email ON feedback(email);
+CREATE INDEX idx_feedback_status ON feedback(status);
+select * from feedback;
+
+ALTER TABLE user
+ADD COLUMN approval_status ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING';
+
+UPDATE user SET approval_status = 'PENDING' WHERE role = 'SELLER';
+
+SELECT
+    id,
+    name,
+    OCTET_LENGTH(image) as image_size
+FROM products
+WHERE id = 51;
+
+ALTER TABLE products
+RENAME COLUMN image_path TO image;
+
+
+
+
+-- Create orders table
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    status ENUM('PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED') DEFAULT 'PENDING',
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    shipping_address TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Create indexes for better query performance
+CREATE INDEX idx_orders_user ON orders(user_id);
+
+
+
+
+CREATE INDEX idx_orders_product ON orders(product_id);
+CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_orders_date ON orders(order_date);
+
+
+ALTER TABLE orders
+ADD COLUMN seller_id INT NOT NULL AFTER user_id,
+ADD COLUMN product_name VARCHAR(200) NOT NULL AFTER product_id,
+ADD COLUMN customer_name VARCHAR(100) NOT NULL AFTER shipping_address,
+ADD FOREIGN KEY (seller_id) REFERENCES user(id);
+
+SELECT ci.*, p.* FROM cart_items ci
+                JOIN products p ON ci.product_id = p.id
+                WHERE ci.id = 31;
+
+select * from user;
+
+INSERT INTO orders (
+    user_id,
+    seller_id,
+    product_id,
+    product_name,
+    quantity,
+    price,
+    status,
+    shipping_address,
+    customer_name
+) VALUES
+(20, 20, 57, 'iPhone 13', 1, 500.00, 'PENDING', '123 Sample Street, Sample City, 12345', 'Pratham'),
+(20, 20, 62, 'Samsung Galaxy', 1, 899.00, 'PENDING', '123 Sample Street, Sample City, 12345', 'Pratham'),
+(20, 20, 63, 'MacBook Pro', 1, 2500.00, 'PENDING', '123 Sample Street, Sample City, 12345', 'Pratham'),
+(20, 22, 66, 'Gaming Laptop', 1, 2600.00, 'PENDING', '123 Sample Street, Sample City, 12345', 'Pratham'),
+(20, 20, 57, 'iPhone 13', 1, 500.00, 'PENDING', '456 Test Avenue, Test City, 67890', 'Pratham'),
+(20, 22, 53, 'Smart TV', 1, 40000.00, 'PENDING', '123 Sample Street, Sample City, 12345', 'Pratham'),
+(20, 20, 52, 'Wireless Earbuds', 1, 599.00, 'PENDING', '789 Demo Road, Demo City, 11223', 'Pratham'),
+(20, 20, 66, 'Gaming Laptop', 1, 2600.00, 'PENDING', '123 Sample Street, Sample City, 12345', 'Pratham');
+
+
+select * from orders;

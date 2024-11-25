@@ -113,7 +113,8 @@ public class ProductController  {
     @PostMapping("/add")
     public String addProduct(@ModelAttribute Product product,
                              @RequestParam("productImage") MultipartFile file,
-                             RedirectAttributes redirectAttributes) {
+                             RedirectAttributes redirectAttributes,
+                             HttpSession session){
         try {
             if (!file.isEmpty()) {
 
@@ -123,8 +124,10 @@ public class ProductController  {
 
                 byte[] imageData = file.getBytes();
                 product.setImage(imageData);
-               // product.setShop_id(3);
-             //   product.setSeller_id(20);
+               Integer userId= (Integer) session.getAttribute("userId");
+               product.setShop_id(3);
+               product.setSeller_id(userId);
+
 
                 System.out.println("Image data size set to product: " + imageData.length + " bytes");
             }

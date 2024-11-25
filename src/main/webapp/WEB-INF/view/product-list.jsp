@@ -412,10 +412,10 @@
                                         onload="handleImageLoad(this)"
                                         onerror="handleImageError(this)"
                                     />
-                                    <script>
+                                   <!-- <script>
                                         console.log('Image URL for product ${product.id}:',
                                                    '${pageContext.request.contextPath}/products/image/${product.id}');
-                                    </script>
+                                    </script>--!>
                                 </c:when>
                                 <c:otherwise>
                                     <div class="image-placeholder">
