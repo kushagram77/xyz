@@ -132,8 +132,8 @@ public class PaymentController {
         }
 
 
-        cartService.createOrdersFromCart(userId,shippingAddress);
-        model.addAttribute("orderId",16);
+        Integer orderId=cartService.createOrdersFromCart(userId,shippingAddress);
+        model.addAttribute("orderId",orderId);
 
         return "payment-success";
 

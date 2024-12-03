@@ -125,7 +125,7 @@ public class OrderDAOImpl extends BaseDAO implements OrderDAO {
     }
 
     @Override
-    public void save(Order order) {
+    public int save(Order order) {
         String sql = "INSERT INTO orders (user_id, seller_id, product_id, product_name, " +
                 "quantity, price, status, shipping_address, customer_name) " +
                 "VALUES (:userId, :sellerId, :productId, :productName, :quantity, " +
@@ -146,6 +146,9 @@ public class OrderDAOImpl extends BaseDAO implements OrderDAO {
         SqlParameterSource ps = new MapSqlParameterSource(params);
         getNamedParameterJdbcTemplate().update(sql, ps, kh);
         order.setId(kh.getKey().intValue());
+        int orderId = kh.getKey().intValue();
+        return orderId;
+
     }
 
 }

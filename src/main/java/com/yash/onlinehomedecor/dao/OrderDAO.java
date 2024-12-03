@@ -7,7 +7,7 @@ import com.yash.onlinehomedecor.domain.Order;
 import java.util.List;
 
 public interface OrderDAO {
-    void save(Order order);
+    int save(Order order);
     void update(Order order);
     void delete(Order order);
     void delete(Integer orderId);

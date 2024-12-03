@@ -1,7 +1,6 @@
 package com.yash.onlinehomedecor.service;
 
 import com.yash.onlinehomedecor.domain.Cart;
-import com.yash.onlinehomedecor.domain.CartItem;
 
 public interface CartService {
     Cart getOrCreateCart(Integer userId);
@@ -11,7 +10,7 @@ public interface CartService {
     Cart getCart(Integer userId);
     void removeFromCartItemBasedOnProductId(Integer productId);
     Integer getCartItemCount(Integer userId);
-    void createOrdersFromCart(int userId, String shippingAddress);
+    Integer createOrdersFromCart(int userId, String shippingAddress);
     Integer getOrderIdFromCart();
 
 }

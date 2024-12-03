@@ -87,12 +87,14 @@ public class CartServiceImpl implements CartService {
 
     @Transactional
     @Override
-    public void createOrdersFromCart(int userId, String shippingAddress) {
+    public Integer createOrdersFromCart(int userId, String shippingAddress) {
         // Get all active cart items for the user
         List<CartItem> cartItems = cartDAO.getActiveCartItems(userId);
         System.out.println("IN createOrdersFromCart Service layer");
+        Integer orderId=0;
         // Create an order for each cart item
         for (CartItem item : cartItems) {
+            System.out.println("kushagraaaa");
             Order order = new Order();
 
             order.setUserId(userId);
@@ -113,14 +115,12 @@ public class CartServiceImpl implements CartService {
             order.setCustomerName(getUserName(userId)); // You'll need to implement this method
 
             // Save the order
-            orderDAO.save(order);
-
-
+            orderId = orderDAO.save(order);
         }
 
         // Clear the cart after creating orders
         cartDAO.clearCart(userId);
-
+        return orderId;
     }
 
     // Helper method to get user's name - implement based on your user service
