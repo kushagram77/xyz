@@ -17,6 +17,7 @@ public class Product {
     private Integer shop_id;
     private boolean available;
 
+
 //    @Lob
 //    @Column(name = "image", columnDefinition = "MEDIUMBLOB")
 @Column(name = "image")

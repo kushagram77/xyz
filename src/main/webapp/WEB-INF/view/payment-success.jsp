@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 <html data-theme="light">
 <head>
@@ -171,6 +172,34 @@
                 opacity: 1;
             }
         }
+
+          .action-buttons {
+                    display: flex;
+                    justify-content: center;
+                    gap: 1rem;
+                    margin-top: 1.5rem;
+                }
+
+                .secondary-btn {
+                    background: var(--text-secondary);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 12px 24px;
+                    font-size: 1.1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    text-decoration: none;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .secondary-btn:hover {
+                    background: var(--text-primary);
+                    transform: translateY(-2px);
+                    color: white;
+                }
     </style>
 </head>
 <body>
@@ -208,20 +237,34 @@
                 </div>
             </div>
         </div>
+
+
     </nav>
 
     <!-- Success Content -->
     <div class="success-container">
-        <span class="material-icons success-icon">check_circle</span>
-        <h1 class="success-title">Payment Successful!</h1>
-        <p class="success-message">
-            Thank you for your purchase! Your order has been successfully placed and will be processed soon.
-            You will receive an email confirmation with your order details shortly.
-        </p>
-        <a href="/OHDSpring/products/list" class="continue-shopping-btn">
-            <span class="material-icons">shopping_bag</span>
-            Continue Shopping
-        </a>
+
+                <span class="material-icons success-icon">check_circle</span>
+                <h1 class="success-title">Payment Successful!</h1>
+                <p class="success-message">
+                    Thank you for your purchase! Your order has been successfully placed and will be processed soon.
+                    You will receive an email confirmation with your order details shortly.
+                </p>
+
+                <div class="action-buttons">
+                    <a href="/OHDSpring/products/list" class="continue-shopping-btn">
+                        <span class="material-icons">shopping_bag</span>
+                        Continue Shopping
+                    </a>
+                    <a href="/OHDSpring/order/bill/${orderId}" class="secondary-btn">
+                        <span class="material-icons">receipt</span>
+                        View Bill
+                    </a>
+                    <a href="/OHDSpring/order/review/${orderId}" class="secondary-btn">
+                        <span class="material-icons">star_rate</span>
+                        Review & Rate
+                    </a>
+                </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

@@ -34,7 +34,7 @@ public class UserServiceImpl extends BaseDAO implements UserService {
     @Override
     public User login(String loginName, String password)  {
 
-        String sql = "SELECT id, name, email, password, role " +
+        String sql = "SELECT * " +
                 "from user where name=:ln and password=:pw";
 
         Map m = new HashMap();
@@ -80,4 +80,7 @@ public class UserServiceImpl extends BaseDAO implements UserService {
         userDAO.delete(userId);
         cartDAO.deleteByUserId(userId);
     }
+
+
+
 }

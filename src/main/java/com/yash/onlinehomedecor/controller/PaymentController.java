@@ -1,7 +1,10 @@
 package com.yash.onlinehomedecor.controller;
 
 import com.yash.onlinehomedecor.command.PaymentCommand;
+import com.yash.onlinehomedecor.domain.User;
+import com.yash.onlinehomedecor.service.CartService;
 import com.yash.onlinehomedecor.service.PaymentService;
+import com.yash.onlinehomedecor.service.UserService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,12 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private CartService cartService;
+
+    @Autowired
+    private UserService userService;
 
     private String razorpayKeyId = "rzp_test_BZSOgBnXQoiSLs";
 
@@ -107,7 +116,26 @@ public class PaymentController {
     }
 
     @RequestMapping("/payment-success")
-    String success(){
+    String success(HttpSession session,Model model){
+
+        Integer userId = (Integer) session.getAttribute("userId");
+        User user=userService.findById(userId);
+        String shippingAddress=user.getAddress();
+        if (userId == null) {
+            // Handle unauthorized access
+            System.out.println("Null user ID");
+            return "redirect:/login";
+        }
+        if(shippingAddress==null){
+            System.out.println("Null Shipping address");
+            return "redirect:/login";
+        }
+
+
+        cartService.createOrdersFromCart(userId,shippingAddress);
+        model.addAttribute("orderId",16);
+
         return "payment-success";
+
     }
 }

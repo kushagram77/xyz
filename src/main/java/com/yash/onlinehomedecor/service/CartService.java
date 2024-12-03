@@ -11,5 +11,7 @@ public interface CartService {
     Cart getCart(Integer userId);
     void removeFromCartItemBasedOnProductId(Integer productId);
     Integer getCartItemCount(Integer userId);
+    void createOrdersFromCart(int userId, String shippingAddress);
+    Integer getOrderIdFromCart();
 
 }

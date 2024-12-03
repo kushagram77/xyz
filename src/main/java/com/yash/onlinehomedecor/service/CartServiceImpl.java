@@ -1,12 +1,13 @@
 package com.yash.onlinehomedecor.service;
 
 import com.yash.onlinehomedecor.dao.CartDAO;
-import com.yash.onlinehomedecor.domain.Cart;
-import com.yash.onlinehomedecor.domain.CartItem;
-import com.yash.onlinehomedecor.domain.Product;
+import com.yash.onlinehomedecor.dao.OrderDAO;
+import com.yash.onlinehomedecor.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -16,6 +17,12 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private OrderDAO orderDAO;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     @Transactional
@@ -78,5 +85,53 @@ public class CartServiceImpl implements CartService {
         return cartDAO.getCartItemCount(userId);
     }
 
+    @Transactional
+    @Override
+    public void createOrdersFromCart(int userId, String shippingAddress) {
+        // Get all active cart items for the user
+        List<CartItem> cartItems = cartDAO.getActiveCartItems(userId);
+        System.out.println("IN createOrdersFromCart Service layer");
+        // Create an order for each cart item
+        for (CartItem item : cartItems) {
+            Order order = new Order();
 
+            order.setUserId(userId);
+
+            order.setSellerId(item.getProduct().getSeller_id());
+
+            order.setProductId(item.getProduct().getId());
+
+            order.setProductName(item.getProduct().getName());
+
+            order.setQuantity(item.getQuantity());
+
+            order.setPrice(item.getProduct().getPrice());
+            order.setStatus("PENDING");
+
+            order.setShippingAddress(shippingAddress);
+
+            order.setCustomerName(getUserName(userId)); // You'll need to implement this method
+
+            // Save the order
+            orderDAO.save(order);
+
+
+        }
+
+        // Clear the cart after creating orders
+        cartDAO.clearCart(userId);
+
+    }
+
+    // Helper method to get user's name - implement based on your user service
+    private String getUserName(int userId) {
+        // Implement logic to fetch user's name from database or user service
+        User user=userService.findById(userId);
+        String customerName=user.getName();
+        return customerName; // Placeholder
+    }
+
+    public Integer getOrderIdFromCart(){
+        return cartDAO.getOrderIdFromCart();
+    }
 }

@@ -3,6 +3,7 @@ package com.yash.onlinehomedecor.dao;
 import com.yash.onlinehomedecor.domain.Cart;
 import com.yash.onlinehomedecor.domain.CartItem;
 import com.yash.onlinehomedecor.domain.Product;
+import com.yash.onlinehomedecor.rm.CartItemRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -163,5 +164,49 @@ public class CartDAOImpl extends BaseDAO implements CartDAO {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
 
         return getNamedParameterJdbcTemplate().queryForObject(sql, params, Integer.class);
+    }
+
+    public List<CartItem> getActiveCartItems(int userId) {
+        String sql = "SELECT ci.id as cart_item_id, ci.cart_id, ci.product_id, ci.quantity, " +
+                "p.id as product_id, p.name, p.description, p.price, p.seller_id " +
+                "FROM cart_items ci " +
+                "JOIN cart c ON ci.cart_id = c.id " +
+                "JOIN products p ON ci.product_id = p.id " +
+                "WHERE c.user_id = ? AND c.status = 'active'";
+
+        return getJdbcTemplate().query(sql, new Object[]{userId}, (rs, rowNum) -> {
+            // Create CartItem
+            CartItem cartItem = new CartItem();
+            cartItem.setId(rs.getInt("cart_item_id"));
+            cartItem.setCartId(rs.getInt("cart_id"));
+            cartItem.setQuantity(rs.getInt("quantity"));
+
+            // Create and populate Product
+            Product product = new Product();
+            product.setId(rs.getInt("product_id"));
+            product.setName(rs.getString("name"));
+            product.setDescription(rs.getString("description"));
+            product.setPrice(rs.getInt("price"));
+            product.setSeller_id(rs.getInt("seller_id"));
+
+            // Set Product in CartItem
+            cartItem.setProduct(product);
+
+            return cartItem;
+        });
+    }
+
+    @Override
+    public void clearCart(int userId) {
+        String sql = "DELETE ci FROM cart_items ci " +
+                "JOIN cart c ON ci.cart_id = c.id " +
+                "WHERE c.user_id = ? AND c.status = 'active'";
+
+        int deletedRows = getJdbcTemplate().update(sql, userId);
+        System.out.println("Cleared " + deletedRows + " cart items for user " + userId);
+    }
+
+    public Integer getOrderIdFromCart(){
+        return 16;
     }
 }

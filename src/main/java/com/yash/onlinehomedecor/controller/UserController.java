@@ -211,5 +211,6 @@ public String registerUser(@ModelAttribute("userCommand") UserCommand cmd, Model
         session.setAttribute("userId", user.getId());
         session.setAttribute("role", user.getRole());
         session.setAttribute("name",user.getName());
+        session.setAttribute("address",user.getAddress());
     }
 }

@@ -4,6 +4,8 @@ package com.yash.onlinehomedecor.dao;
 import com.yash.onlinehomedecor.domain.Cart;
 import com.yash.onlinehomedecor.domain.CartItem;
 
+import java.util.List;
+
 public interface CartDAO {
     Cart getCartByUserId(Integer userId);
     void createCart(Cart cart);
@@ -15,5 +17,9 @@ public interface CartDAO {
     void deleteByUserId(Integer userId);
 
     Integer getCartItemCount(Integer userId);
+
+    List<CartItem> getActiveCartItems(int userId);
+    void clearCart(int userId);
+    Integer getOrderIdFromCart();
 }
 

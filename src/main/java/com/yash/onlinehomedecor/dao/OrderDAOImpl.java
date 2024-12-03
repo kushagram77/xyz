@@ -16,30 +16,30 @@ import java.util.Map;
 @Repository
 public class OrderDAOImpl extends BaseDAO implements OrderDAO {
 
-    @Override
-    public void save(Order order) {
-        String sql = "INSERT INTO orders (user_id, seller_id, product_id, product_name, " +
-                "quantity, price, status, order_date, shipping_address, customer_name) " +
-                "VALUES (:userId, :sellerId, :productId, :productName, :quantity, " +
-                ":price, :status, :orderDate, :shippingAddress, :customerName)";
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("userId", order.getUserId());
-        params.put("sellerId", order.getSellerId());
-        params.put("productId", order.getProductId());
-        params.put("productName", order.getProductName());
-        params.put("quantity", order.getQuantity());
-        params.put("price", order.getPrice());
-        params.put("status", order.getStatus());
-        params.put("orderDate", order.getOrderDate());
-        params.put("shippingAddress", order.getShippingAddress());
-        params.put("customerName", order.getCustomerName());
-
-        KeyHolder kh = new GeneratedKeyHolder();
-        SqlParameterSource ps = new MapSqlParameterSource(params);
-        super.getNamedParameterJdbcTemplate().update(sql, ps, kh);
-        order.setId(kh.getKey().intValue());
-    }
+//    @Override
+//    public void save(Order order) {
+//        String sql = "INSERT INTO orders (user_id, seller_id, product_id, product_name, " +
+//                "quantity, price, status, order_date, shipping_address, customer_name) " +
+//                "VALUES (:userId, :sellerId, :productId, :productName, :quantity, " +
+//                ":price, :status, :orderDate, :shippingAddress, :customerName)";
+//
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("userId", order.getUserId());
+//        params.put("sellerId", order.getSellerId());
+//        params.put("productId", order.getProductId());
+//        params.put("productName", order.getProductName());
+//        params.put("quantity", order.getQuantity());
+//        params.put("price", order.getPrice());
+//        params.put("status", order.getStatus());
+//        params.put("orderDate", order.getOrderDate());
+//        params.put("shippingAddress", order.getShippingAddress());
+//        params.put("customerName", order.getCustomerName());
+//
+//        KeyHolder kh = new GeneratedKeyHolder();
+//        SqlParameterSource ps = new MapSqlParameterSource(params);
+//        super.getNamedParameterJdbcTemplate().update(sql, ps, kh);
+//        order.setId(kh.getKey().intValue());
+//    }
 
     @Override
     public void update(Order order) {
@@ -123,4 +123,29 @@ public class OrderDAOImpl extends BaseDAO implements OrderDAO {
 
         getNamedParameterJdbcTemplate().update(sql, params);
     }
+
+    @Override
+    public void save(Order order) {
+        String sql = "INSERT INTO orders (user_id, seller_id, product_id, product_name, " +
+                "quantity, price, status, shipping_address, customer_name) " +
+                "VALUES (:userId, :sellerId, :productId, :productName, :quantity, " +
+                ":price, :status, :shippingAddress, :customerName)";
+        System.out.println("IN DAO save layer");
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", order.getUserId());
+        params.put("sellerId", order.getSellerId());
+        params.put("productId", order.getProductId());
+        params.put("productName", order.getProductName());
+        params.put("quantity", order.getQuantity());
+        params.put("price", order.getPrice());
+        params.put("status", order.getStatus());
+        params.put("shippingAddress", order.getShippingAddress());
+        params.put("customerName", order.getCustomerName());
+
+        KeyHolder kh = new GeneratedKeyHolder();
+        SqlParameterSource ps = new MapSqlParameterSource(params);
+        getNamedParameterJdbcTemplate().update(sql, ps, kh);
+        order.setId(kh.getKey().intValue());
+    }
+
 }

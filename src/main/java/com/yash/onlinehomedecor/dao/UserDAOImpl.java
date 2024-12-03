@@ -5,6 +5,7 @@ package com.yash.onlinehomedecor.dao;
  */
 import com.yash.onlinehomedecor.domain.User;
 import com.yash.onlinehomedecor.rm.UserRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -77,6 +78,8 @@ public class UserDAOImpl extends BaseDAO implements UserDAO{
         String sql = "SELECT * "
                 + " FROM user WHERE id=?";
         User u = getJdbcTemplate().queryForObject(sql, new UserRowMapper(),userId);
+        System.out.println("Shipping address in DAO"+u.getAddress());
+        System.out.println("Customer Name"+u.getName());
         return u;
     }
 
@@ -102,5 +105,7 @@ public class UserDAOImpl extends BaseDAO implements UserDAO{
                 + " FROM user WHERE "+propName+"=?";
         return getJdbcTemplate().query(sql, new UserRowMapper(), propValue);
     }
+
+
 
 }

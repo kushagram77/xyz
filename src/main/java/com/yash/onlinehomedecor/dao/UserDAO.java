@@ -16,6 +16,7 @@ public interface UserDAO {
     public List<User> findAll(Integer id);
     public List<User> findAll();
     public List<User> findByProperty(String propName,Object propValue);
+    //String getShippingAddress(int userId);
 
 
 }
