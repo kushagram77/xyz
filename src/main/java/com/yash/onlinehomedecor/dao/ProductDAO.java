@@ -26,4 +26,6 @@ public interface ProductDAO {
     void deleteShop(int id);
 
     List<Product> getProductsBySellerId(int sellerId);
+
+    List<Product> searchProductsByNameOrDescription(String query);
 }

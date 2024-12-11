@@ -9,6 +9,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Seller Orders - Online Home Decor</title>
+        <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
         <style>
@@ -210,7 +212,66 @@
                 .status-select {
                     width: 100%;
                 }
+
+                 .header .nav-btn {
+                                                           color: white;
+                                                           text-decoration: none;
+                                                           display: flex;
+                                                           align-items: center;
+                                                           gap: 0.5rem;
+                                                           padding: 0.5rem 1rem;
+                                                           border-radius: 8px;
+                                                           transition: background-color 0.3s;
+                                                           font-weight: 500;
+                                                       }
             }
+            .header {
+                            background: var(--header-bg);
+                            padding: 28px;
+                            text-align: center;
+                            position: relative;
+                            margin-bottom: 40px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                        }
+
+                        .header h1 {
+                            color: white;
+                            font-size: 24px;
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            font-family: 'Poppins', sans-serif;
+                            margin: 0 auto;
+                        }
+
+                        .header .nav-btn {
+                            color: white;
+                            text-decoration: none;
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            padding: 0.5rem 1rem;
+                            border-radius: 8px;
+                            transition: background-color 0.3s;
+                            font-weight: 500;
+                        }
+
+                        .header .nav-btn:hover {
+                            background-color: rgba(255, 255, 255, 0.2);
+                        }
+
+                        @media (max-width: 768px) {
+                            .header {
+                                flex-direction: column;
+                                align-items: center;
+                            }
+
+                            .header .nav-btn {
+                                margin-top: 1rem;
+                            }
+                        }
         </style>
     </head>
     <body>
@@ -218,11 +279,17 @@
             <span class="material-icons">dark_mode</span>
         </button>
 
+
         <header class="header">
             <h1>
                 <span class="material-icons">shopping_bag</span>
                 Seller Orders
             </h1>
+            <a href="/OHDSpring/admin/dashboard" class="nav-btn">
+                                                                                <span class="material-icons">dashboard</span>
+                                                                                <span>Dashboard</span>
+                                                                            </a>
+
         </header>
 
         <div class="main-container">

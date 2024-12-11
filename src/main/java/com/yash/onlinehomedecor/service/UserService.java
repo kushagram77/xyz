@@ -15,5 +15,6 @@ public interface UserService {
     List<User> findByProperty(String propName, Object propValue);
     void blockUser(Integer userId);
 
-
+    public boolean isEmailExists(String email);
+    public User findByUserName(String name);
 }

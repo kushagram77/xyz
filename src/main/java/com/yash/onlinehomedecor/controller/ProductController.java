@@ -49,10 +49,17 @@ public class ProductController  {
 
     // Update existing listProducts method to include image URLs
     @GetMapping("/list")
-    public String listProducts(Model model) {
+    public String listProducts(Model model,@RequestParam(required=false)String search) {
         try {
-            List<Product> products = productService.getAllProducts();
-            model.addAttribute("products", products);
+            if(search!=null && !search.trim().isEmpty()){
+
+                List<Product> searchedProducts=productService.searchProducts(search);
+                model.addAttribute("products",searchedProducts);
+            }
+            else {
+                List<Product> products = productService.getAllProducts();
+                model.addAttribute("products", products);
+            }
             return "product-list";
         } catch (Exception e) {
             model.addAttribute("error", "Failed to load products");
@@ -211,6 +218,24 @@ public class ProductController  {
 
         model.addAttribute("products", products);
         return "seller_products";
+    }
+
+
+    @GetMapping("/search")
+    public String searchProducts(
+            @RequestParam(name = "query", required = false) String query,
+            Model model
+    ) {
+        if (query == null || query.trim().isEmpty()) {
+            // If no query, redirect to home page
+            return "redirect:/";
+        }
+
+        // Search products by name or description
+        List<Product> searchResults = productService.searchProducts(query);
+        model.addAttribute("products", searchResults);
+        System.out.println("In controller search products ");
+        return "search-results"; // jsp page for searched products
     }
 
 

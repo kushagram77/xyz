@@ -93,13 +93,24 @@ public class CartDAOImpl extends BaseDAO implements CartDAO {
 
 
 
+//    @Override
+//    public void updateCartItem(CartItem item) {
+//        String sql = "UPDATE cart_items SET quantity = :quantity WHERE id = :id";
+//
+//        MapSqlParameterSource params = new MapSqlParameterSource();
+//        params.addValue("quantity", item.getQuantity());
+//        params.addValue("id", item.getId());
+//
+//        getNamedParameterJdbcTemplate().update(sql, params);
+//    }
+
     @Override
-    public void updateCartItem(CartItem item) {
+    public void updateCartItem(Integer cartItemId, int quantity) {
         String sql = "UPDATE cart_items SET quantity = :quantity WHERE id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("quantity", item.getQuantity());
-        params.addValue("id", item.getId());
+        params.addValue("quantity", quantity);
+        params.addValue("id", cartItemId);
 
         getNamedParameterJdbcTemplate().update(sql, params);
     }

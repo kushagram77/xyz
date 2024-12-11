@@ -2,10 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html data-theme="light">
+<%@ page isELIgnored="false" %>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Online Home Decor</title>
+    <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Google Fonts -->
@@ -263,9 +266,9 @@
                     <span class="material-icons">account_circle</span>
                     <span>Profile</span>
                 </a>
-                <a href="/OHDSpring/admin/dashboard" class="nav-btn">
+                <!---<a href="/OHDSpring/admin/dashboard" class="nav-btn">
                     <span class="material-icons">dashboard</span>
-                    <span>Dashboard</span>
+                    <span>Dashboard</span>---!>
                 </a>
                 <a href="/OHDSpring/index" class="nav-btn">
                     <span class="material-icons">logout</span>
@@ -284,7 +287,7 @@
             <div class="dashboard-card">
                 <h5>Manage Buyers</h5>
                 <p>View and manage all registered buyers</p>
-                <a href="admin/buyers" class="btn">
+                <a href="buyers" class="btn">
                     <span class="material-icons">people</span>
                     View Buyers
                 </a>
@@ -293,7 +296,7 @@
             <div class="dashboard-card">
                 <h5>Manage Sellers</h5>
                 <p>Approve or reject seller applications</p>
-                <a href="admin/sellers" class="btn">
+                <a href="sellers" class="btn">
                     <span class="material-icons">store</span>
                     View Sellers
                 </a>
@@ -302,7 +305,7 @@
             <div class="dashboard-card">
                 <h5>Manage Products</h5>
                 <p>View and manage all products</p>
-                <a href="admin/products" class="btn">
+                <a href="products" class="btn">
                     <span class="material-icons">inventory</span>
                     View Products
                 </a>
@@ -316,6 +319,24 @@
                     View Feedback
                 </a>
             </div>
+
+            <div class="dashboard-card">
+                            <h5>Manage Order</h5>
+                            <p>View and manage customer Orders</p>
+                            <a href="order-list" class="btn">
+                                <span class="material-icons">inventory</span>
+                                View Orders
+                            </a>
+            </div>
+
+             <div class="dashboard-card">
+                                        <h5>Manage Review & Ratings</h5>
+                                        <p>View Review & Ratings</p>
+                                        <a href="review/list" class="btn">
+                                            <span class="material-icons">feedback</span>
+                                            View Review & Rating
+                       </a>
+              </div>
         </div>
     </div>
 

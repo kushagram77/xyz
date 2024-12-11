@@ -17,4 +17,5 @@ public interface OrderDAO {
     List<Order> findByProperty(String propName, Object propValue);
     List<Order> getOrdersBySellerId(int sellerId);
     void updateOrderStatus(int orderId, String status);
+    public List<Order> findByProductId(Integer productId);
 }

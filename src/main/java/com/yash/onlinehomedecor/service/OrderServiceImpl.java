@@ -28,5 +28,13 @@ public class OrderServiceImpl implements OrderService {
     public Order getOrderById(int orderId) {
         return orderDAO.findById(orderId);
     }
+
+    public List<Order> findByProductId(Integer productId){
+        return orderDAO.findByProductId(productId);
+    }
+
+    public List<Order> findAll(){
+        return orderDAO.findAll();
+    }
 }
 

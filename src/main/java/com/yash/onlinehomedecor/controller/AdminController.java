@@ -2,12 +2,13 @@ package com.yash.onlinehomedecor.controller;
 
 
 
+import com.yash.onlinehomedecor.dao.OrderDAO;
+import com.yash.onlinehomedecor.domain.Order;
 import com.yash.onlinehomedecor.domain.Product;
+import com.yash.onlinehomedecor.domain.ProductReview;
 import com.yash.onlinehomedecor.domain.User;
 import com.yash.onlinehomedecor.enums.UserRole;
-import com.yash.onlinehomedecor.service.AdminService;
-import com.yash.onlinehomedecor.service.ProductService;
-import com.yash.onlinehomedecor.service.UserService;
+import com.yash.onlinehomedecor.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,14 @@ public class AdminController {
     private ProductService productService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ProductReviewService reviewService;
+
+//    @Autowired
+//    private OrderDAO orderDAO;
+
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/dashboard")
     public String dashboard() {
@@ -48,17 +57,7 @@ public class AdminController {
         return "manage-sellers";
     }
 
-//    @PostMapping("/admin/sellers/{id}/approve")
-//    public String approveSeller(@PathVariable Integer id) {
-//        adminService.approveSeller(id);
-//        return "redirect:/admin/sellers";
-//    }
-//
-//    @PostMapping("/admin/sellers/{id}/reject")
-//    public String rejectSeller(@PathVariable Integer id) {
-//        adminService.rejectSeller(id);
-//        return "redirect:/admin/sellers";
-//    }
+
 @RequestMapping(value = "/sellers/{id}/approve", method = RequestMethod.GET)
 public String approveSeller(@PathVariable("id") int sellerId, RedirectAttributes redirectAttributes) {
     try {
@@ -204,6 +203,58 @@ public String approveSeller(@PathVariable("id") int sellerId, RedirectAttributes
     String notificationsSeller(){
         return "admin_notifications";
     }
+
+    @RequestMapping(value = "/order-list")
+    String getAllOrders(Model model){
+        List<Order> orders=orderService.findAll();
+        model.addAttribute("orders",orders);
+        return "view-admin-orders";
+    }
+
+    @PostMapping("/orders/{orderId}/status")
+    public String updateOrderStatus(@PathVariable int orderId,
+                                    @RequestParam String status,
+                                    RedirectAttributes redirectAttributes) {
+        try {
+            orderService.updateOrderStatus(orderId, status);
+            redirectAttributes.addFlashAttribute("message", "Order status updated successfully");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", "Failed to update order status");
+            redirectAttributes.addFlashAttribute("messageType", "error");
+        }
+        return "redirect:/admin/order-list";
+    }
+
+    @RequestMapping("/review/list")
+    public String listReviews(Model model) {
+        System.out.println("In review controller !");
+        List<ProductReview> reviews = reviewService.getAllReviews();
+        model.addAttribute("reviews", reviews);
+        return "admin-review-list";
+    }
+
+    @PostMapping("/review/approve/{reviewId}")
+    public String approveReview(@PathVariable int reviewId, RedirectAttributes redirectAttributes) {
+        try {
+            reviewService.approveReview(reviewId);
+            redirectAttributes.addFlashAttribute("successMessage", "Review approved successfully");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to approve review");
+        }
+        return "redirect:/admin/review/list";
+    }
+
+//    @PostMapping("/review/reject/{reviewId}")
+//    public String rejectReview(@PathVariable int reviewId, RedirectAttributes redirectAttributes) {
+//        try {
+//            reviewService.rejectReview(reviewId);
+//            redirectAttributes.addFlashAttribute("successMessage", "Review rejected successfully");
+//        } catch (Exception e) {
+//            redirectAttributes.addFlashAttribute("errorMessage", "Failed to reject review");
+//        }
+//        return "redirect:/admin/review/list";
+//    }
 
 
 

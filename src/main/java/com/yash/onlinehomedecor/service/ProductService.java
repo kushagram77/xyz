@@ -26,4 +26,6 @@ public interface ProductService {
     void deleteShop(int id);
 
     List<Product> getProductsBySellerId(int sellerId);
+
+    List<Product> searchProducts(String query);
 }

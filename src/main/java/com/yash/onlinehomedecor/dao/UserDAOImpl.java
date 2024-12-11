@@ -108,4 +108,22 @@ public class UserDAOImpl extends BaseDAO implements UserDAO{
 
 
 
+    public User findByName(String name ){
+        String sql = "SELECT * "
+                + " FROM user WHERE name=?";
+        User u = getJdbcTemplate().queryForObject(sql, new UserRowMapper(),name);
+
+        return u;
+    }
+
+    public boolean isEmailExists(String email) {
+        String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
+        try {
+            Integer count = getJdbcTemplate().queryForObject(sql, Integer.class, email);
+            return count != null && count > 0;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
+    }
+
 }

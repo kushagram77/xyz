@@ -8,6 +8,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Online Home Decor</title>
+        <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
         <style>
@@ -253,7 +255,8 @@
 
             .success {
                 background-color: var(--success);
-                color: white;
+                color: red;
+                border-left: 5px solid #2e7d32
             }
 
             .footer {
@@ -344,10 +347,11 @@
                     <span class="material-icons">home</span>
                     Online Home Decor
 
-                    <!----<a href="<s:url value="/"/>" >
+
+                   <!-- <a href="<s:url value="/"/>" >
                                             <span class="material-icons">home</span>
                                             Home
-                                        </a>---!>
+                                        </a>--!>
                 </h1>
             </header>
 
@@ -367,12 +371,12 @@
                             Logout Successfully! Thanks for using our application.
                         </div>
                     </c:if>
-                    <c:if test="${param.act eq 'reg'}">
-                        <div class="success">
-                            <span class="material-icons">check_circle_outline</span>
-                            Registration Successful! Please login to continue.
-                        </div>
-                    </c:if>
+                      <div class="notification" id="notification">
+                               <c:if test="${param.act eq 'reg'}">
+                                   <p class="successMsg">Registered successfully</p>
+                               </c:if>
+                           </div>
+
 
                  <!--   <div class="radio-group">
                              <div class="radio-option">
@@ -389,7 +393,7 @@
                         <div class="form-group">
                             <div class="label-with-icon">
                                 <span class="material-icons">person_outline</span>
-                                <label>Username</label>
+                                <label>Email</label>
                             </div>
                             <f:input path="loginName" placeholder="Enter your username"/>
                         </div>
@@ -418,7 +422,7 @@
             </main>
 
             <footer class="footer">
-                © [2024-2025] Copyrights by Yash TECHNOLOGIES | All Rights Reserved
+                 <p>&copy; 2024 Online Home Decor. All rights reserved.</p>
             </footer>
         </div>
 

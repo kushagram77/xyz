@@ -9,6 +9,7 @@
     <meta charset="UTF-8">
     <title>Shopping Cart - Online Home Decor</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -354,7 +355,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/OHDSpring/products">
+            <a class="navbar-brand" href="#">
                 <span class="material-icons">shopping_bag</span>
                 Online Home Decor
             </a>
@@ -397,16 +398,17 @@
                     <span class="material-icons empty-cart-icon">shopping_cart</span>
                     <h2>Your cart is empty</h2>
                     <p>Looks like you haven't added any items to your cart yet.</p>
-                    <a href="/OHDSpring/products" class="btn btn-primary mt-3">Continue Shopping</a>
+                    <a href="/OHDSpring/products/list" class="btn btn-primary mt-3">Continue Shopping</a>
                 </div>
             </c:when>
             <c:otherwise>
                 <div class="cart-items">
                     <c:forEach items="${cartItems}" var="item">
                         <div class="cart-item" data-item-id="${item.id}">
+
                             <c:choose>
                                 <c:when test="${not empty item.product.image}">
-                                    <img src="<s:url value='/products/image/${product.id}'/>"
+                                    <img src="<s:url value='/products/image/${item.product.id}'/>"
                                          alt="${item.product.name}"
                                          class="cart-item-image"
                                          onerror="handleImageError(this)" />
@@ -424,10 +426,10 @@
                             </div>
 
                             <div class="quantity-controls">
-                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                               <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
                                 <input type="number" class="quantity-input" value="${item.quantity}"
                                        min="1" onchange="updateQuantity(${item.id}, this.value)">
-                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                              <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
                             </div>
 
                             <button class="remove-btn" onclick="removeItem(${item.id})">
@@ -439,6 +441,45 @@
 
                 <div class="cart-summary">
                     <div class="cart-total">Total: ₹${cartTotal}</div>
+
+                    <div class="delivery-info-section">
+                            <h3 class="delivery-title">Delivery Information</h3>
+                            <form id="deliveryForm">
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="fullName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="fullName" required>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="address" class="form-label">Full Address</label>
+                                        <textarea class="form-control" id="address" required rows="3"></textarea>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="state" class="form-label">State</label>
+                                            <select class="form-select" id="state" required>
+                                                <option value="">Select State</option>
+                                                <option value="Maharashtra">Maharashtra</option>
+                                                <option value="Karnataka">Karnataka</option>
+                                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                                <!-- Add more states -->
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="city" class="form-label">City</label>
+                                            <input type="text" class="form-control" id="city" required>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="pincode" class="form-label">Pincode</label>
+                                            <input type="text" class="form-control" id="pincode"
+                                                   pattern="[0-9]{6}"
+                                                   title="Pincode must be 6 digits"
+                                                   required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     <form action="${pageContext.request.contextPath}/checkout" method="POST" id="checkoutForm">
                         <input type="hidden" name="amount" value="${cartTotal}">
                         <button type="button" class="checkout-btn" onclick="proceedToCheckout()">
@@ -465,30 +506,46 @@
         }
 
         function updateQuantity(cartItemId, change) {
-            let input = document.querySelector(`[data-item-id="${cartItemId}"] .quantity-input`);
-            let newQuantity;
+            console.log("Updating quantity for cart item:", cartItemId);
+            console.log("Change value:", change);
 
-            if (typeof change === "string") {
-                newQuantity = parseInt(change);
-            } else {
-                newQuantity = parseInt(input.value) + change;
+            let input = document.querySelector(`[data-item-id="${cartItemId}"] .quantity-input`);
+
+            if (!input) {
+                console.error("Could not find quantity input for cart item:", cartItemId);
+                return;
             }
 
-            if (newQuantity < 1) newQuantity = 1;
+            let currentQuantity = parseInt(input.value);
+            console.log("Current quantity:", currentQuantity);
+
+            let newQuantity;
+            if (typeof change === 'number') {
+                newQuantity = currentQuantity + change;
+            } else {
+                newQuantity = parseInt(change);
+            }
+
+            newQuantity = Math.max(1, newQuantity);
+            console.log("New quantity:", newQuantity);
 
             $.ajax({
-                url: 'cart/update',
+                url: 'cart/update',  // Ensure this URL is correct and matches your controller mapping
                 method: 'POST',
                 data: {
                     cartItemId: cartItemId,
                     quantity: newQuantity
                 },
-                success: function() {
+                success: function(response) {
+                    console.log("Cart update response:", response);
                     input.value = newQuantity;
-                    location.reload(); // Reload to update total
+                    location.reload();
                     showNotification("Cart updated successfully", "success");
                 },
-                error: function() {
+                error: function(xhr, status, error) {
+                    console.error("Update cart error:", error);
+                    console.error("XHR status:", status);
+                    console.error("XHR response:", xhr.responseText);
                     showNotification("Failed to update cart", "error");
                 }
             });

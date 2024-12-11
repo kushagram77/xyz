@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -99,5 +100,10 @@ public class ProductServiceImpl implements ProductService {
             System.out.println("In Product Service:"+p.getDescription());
         }
         return productDAO.getProductsBySellerId(sellerId);
+    }
+
+    @Override
+    public List<Product> searchProducts(String query) {
+        return productDAO.searchProductsByNameOrDescription(query);
     }
 }

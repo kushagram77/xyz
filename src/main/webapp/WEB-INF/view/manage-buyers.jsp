@@ -9,6 +9,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Buyers - Online Home Decor</title>
+    <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Google Fonts -->
@@ -234,6 +236,19 @@
                 overflow-x: auto;
             }
         }
+
+        .header .nav-btn {
+                                color: white;
+                                text-decoration: none;
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                                padding: 0.5rem 1rem;
+                                border-radius: 8px;
+                                transition: background-color 0.3s;
+                                font-weight: 500;
+                            }
+
     </style>
 </head>
 <body>
@@ -245,6 +260,11 @@
             </h1>
         </a>
         <div class="header-controls">
+
+                 <a href="/OHDSpring/admin/dashboard" class="nav-btn">
+                                                        <span class="material-icons">dashboard</span>
+                                                        <span>Dashboard</span>
+                                                    </a>
             <a href="/OHDSpring/index" class="logout-btn">
                 <span class="material-icons">logout</span>
                 <span>Logout</span>
@@ -252,6 +272,8 @@
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                 <span class="material-icons">dark_mode</span>
             </button>
+
+
         </div>
     </header>
 

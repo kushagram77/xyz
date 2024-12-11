@@ -8,6 +8,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Products - Online Home Decor</title>
+    <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
@@ -290,6 +292,65 @@
                 margin: 8px;
             }
         }
+
+        .search-container {
+            flex-grow: 1;
+            margin: 0 1rem;
+        }
+
+        .search-form {
+            display: flex;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px 0 0 8px;
+            /* Add these new properties */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Add these new rules for dark mode */
+        [data-theme="dark"] .search-input {
+            background: var(--input-bg);
+            color: var(--text-primary);
+            border-color: var(--border);
+        }
+
+        [data-theme="light"] .search-input {
+            background: var(--input-bg);
+            color: var(--text-primary);
+            border-color: var(--border);
+        }
+
+        .search-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .search-button .material-icons {
+            color: white;
+        }
+
+        @media (max-width: 640px) {
+            .search-container {
+                display: none; /* Optional: hide search on very small screens */
+            }
+        }
     </style>
 
     <style>
@@ -362,17 +423,26 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="nav-and-controls d-flex align-items-center">
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/OHDSpring/index">
-                                <span class="material-icons">logout</span>
-                                Logout
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+
                 <div class="header-controls">
+                    <!-- Add the search container here -->
+                    <div class="search-container">
+                        <form action="<s:url value="/products/list"/>" method="get" class="search-form">
+                            <div class="input-group">
+                                <input
+                                    type="search"
+                                    name="search"
+                                    class="form-control search-input"
+                                    placeholder="Search products..."
+                                    aria-label="Search products"
+                                >
+                                <button type="submit" class="btn btn-primary search-button">
+                                    <span class="material-icons">search</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
                     <div class="cart-icon" onclick="window.location.href='/OHDSpring/cart'">
                         <span class="material-icons">shopping_cart</span>
                         Cart <span class="cart-count">0</span>
@@ -380,6 +450,16 @@
                     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                         <span class="material-icons">dark_mode</span>
                     </button>
+                     <div class="collapse navbar-collapse" id="navbarNav">
+                                        <ul class="navbar-nav">
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="/OHDSpring/index">
+                                                    <span class="material-icons">logout</span>
+                                                    Logout
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                 </div>
             </div>
         </div>
@@ -389,7 +469,7 @@
 
 
     <div class="container">
-        <h1 style="margin-top: 20px" class="welcome-title">Welcome <% out.print(session.getAttribute("name")); %></h1>
+        <h1 style="margin-top: 20px" class="welcome-title">Welcome, <% out.print(session.getAttribute("name")); %></h1>
 
            <!----- <div class="row">
                 <div class="col-12">

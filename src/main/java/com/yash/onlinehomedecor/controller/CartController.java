@@ -64,6 +64,7 @@ public class CartController {
     public ResponseEntity<?> updateQuantity(
             @RequestParam Integer cartItemId,
             @RequestParam Integer quantity) {
+        System.out.println("In cart update controller");
         cartService.updateCartItemQuantity(cartItemId, quantity);
         return ResponseEntity.ok().build();
     }

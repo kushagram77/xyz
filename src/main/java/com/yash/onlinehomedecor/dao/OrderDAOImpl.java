@@ -113,6 +113,8 @@ public class OrderDAOImpl extends BaseDAO implements OrderDAO {
         return getJdbcTemplate().query(sql, new OrderRowMapper().orderRowMapper, sellerId);
     }
 
+
+
     @Override
     public void updateOrderStatus(int orderId, String status) {
         String sql = "UPDATE orders SET status = :status WHERE id = :orderId";
@@ -149,6 +151,11 @@ public class OrderDAOImpl extends BaseDAO implements OrderDAO {
         int orderId = kh.getKey().intValue();
         return orderId;
 
+    }
+
+    public List<Order> findByProductId(Integer productId){
+        String sql = "SELECT * FROM orders WHERE product_id = ?";
+        return getJdbcTemplate().query(sql, new OrderRowMapper().orderRowMapper, productId);
     }
 
 }

@@ -5,7 +5,8 @@ import com.yash.onlinehomedecor.domain.Cart;
 public interface CartService {
     Cart getOrCreateCart(Integer userId);
     void addToCart(Integer userId, Integer productId, Integer quantity);
-    void updateCartItemQuantity(Integer cartItemId, Integer quantity);
+    //void updateCartItemQuantity(Integer cartItemId, Integer quantity);
+    public void updateCartItemQuantity(Integer cartItemId, int quantity);
     void removeFromCart(Integer cartItemId);
     Cart getCart(Integer userId);
     void removeFromCartItemBasedOnProductId(Integer productId);

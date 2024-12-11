@@ -35,10 +35,10 @@ public class UserServiceImpl extends BaseDAO implements UserService {
     public User login(String loginName, String password)  {
 
         String sql = "SELECT * " +
-                "from user where name=:ln and password=:pw";
+                "from user where email=:email and password=:pw";
 
         Map m = new HashMap();
-        m.put("ln", loginName);
+        m.put("email", loginName);
         m.put("pw", password);
 
         try {
@@ -79,6 +79,17 @@ public class UserServiceImpl extends BaseDAO implements UserService {
     public void blockUser(Integer userId){
         userDAO.delete(userId);
         cartDAO.deleteByUserId(userId);
+    }
+
+    @Override
+    public boolean isEmailExists(String email) {
+        return userDAO.isEmailExists(email);
+    }
+
+    @Override
+    public User findByUserName(String name){
+
+        return userDAO.findByName(name);
     }
 
 

@@ -8,6 +8,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile - Online Home Decor</title>
+    <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <style>
@@ -223,7 +225,41 @@
                      .hidden-class {
                         color: var(--header-bg);
                      }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }
 
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .header .nav-btn {
+                                                   color: white;
+                                                   text-decoration: none;
+                                                   display: flex;
+                                                   align-items: center;
+                                                   gap: 0.5rem;
+                                                   padding: 0.5rem 1rem;
+                                                   border-radius: 8px;
+                                                   transition: background-color 0.3s;
+                                                   font-weight: 500;
+                                               }
 
 
 
@@ -237,12 +273,18 @@
             Edit Profile
         </h1>
 
-        <!-- Back to Dashboard Button -->
-                          <a href="${pageContext.request.contextPath}/admin/dashboard" class="back-dashboard-btn">
-                            <span class="material-icons">arrow_back</span>
-                            Back to Dashboard
-                          </a>
+        <div class="header-actions">
 
+
+            <a href="/OHDSpring/admin/dashboard" class="nav-btn">
+                                                                        <span class="material-icons">dashboard</span>
+                                                                        <span>Dashboard</span>
+                                                                    </a>
+
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                            <span class="material-icons">dark_mode</span>
+                        </button>
+        </div>
     </header>
 
     <div class="profile-container">
@@ -283,18 +325,24 @@
     </div>
 
     <script>
-        // Theme toggle script (same as in dashboard)
         function toggleTheme() {
             const html = document.documentElement;
             const theme = html.getAttribute('data-theme');
             const newTheme = theme === 'light' ? 'dark' : 'light';
             html.setAttribute('data-theme', newTheme);
+
+            const icon = document.querySelector('.theme-toggle .material-icons');
+            icon.textContent = newTheme === 'light' ? 'dark_mode' : 'light_mode';
+
             localStorage.setItem('theme', newTheme);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
+
+            const icon = document.querySelector('.theme-toggle .material-icons');
+            icon.textContent = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
         });
     </script>
 </body>

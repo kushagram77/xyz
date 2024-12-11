@@ -6,6 +6,7 @@ import com.yash.onlinehomedecor.domain.Product;
 import com.yash.onlinehomedecor.domain.User;
 import com.yash.onlinehomedecor.enums.UserRole;
 import com.yash.onlinehomedecor.exception.UserBlockedException;
+import com.yash.onlinehomedecor.service.EmailService;
 import com.yash.onlinehomedecor.service.ProductService;
 import com.yash.onlinehomedecor.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,20 @@ public class UserController {
     @Autowired
     private ProductService productService;
 
-    @RequestMapping(value = {"/", "/index"})
-    public String index(Model model) {
+    @Autowired
+    private EmailService emailService;
 
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
+    @RequestMapping(value = {"/", "/index"})
+    public String index(Model model,@RequestParam(required = false) String search) {
+        if(search!=null && !search.trim().isEmpty()){
+
+            List<Product> searchedProducts=productService.searchProducts(search);
+            model.addAttribute("products",searchedProducts);
+        }
+        else {
+            List<Product> products = productService.getAllProducts();
+            model.addAttribute("products", products);
+        }
         //return "product-list";
         return "landing"; // JSP - /WEB-INF/view/landing.jsp
     }
@@ -56,6 +66,7 @@ public class UserController {
 
             // Check if the user is a REQUESTEDSELLER
 
+
             if (loggedInUser.getRole() == UserRole.REQUESTEDSELLER) {
                 model.addAttribute("err", "Your seller account is pending approval from admin. Please wait for approval.");
                 return "index";
@@ -64,10 +75,11 @@ public class UserController {
             addUserInSession(loggedInUser, session);
 
             if (loggedInUser.getRole() == UserRole.ADMIN) {
-                return "dashboard_admin";
-                //return "redirect:/admin/dashboard";
+               // return "dashboard_admin";
+                return "redirect:/admin/dashboard";
             } else if (loggedInUser.getRole() == UserRole.SELLER) {
-                return "dashboard_seller";
+                //return "dashboard_seller";
+                return "redirect:/xyz";
             } else if (loggedInUser.getRole() == UserRole.BUYER) {
                 return "redirect:/products/list";
             }
@@ -119,30 +131,71 @@ public class UserController {
     }
 
 
-@RequestMapping(value = "/register", method = RequestMethod.POST)
-public String registerUser(@ModelAttribute("userCommand") UserCommand cmd, Model model) {
-    try {
-        User user = cmd.getUser();
-        String selectedRole = cmd.getUser().getRole().name();
 
-        // If the user is registering as a seller, set role to REQUESTEDSELLER
-        if (UserRole.valueOf(selectedRole) == UserRole.SELLER) {
-            user.setRole(UserRole.REQUESTEDSELLER);
-            model.addAttribute("successMessage", "Registration successful! Please wait for admin approval to access your seller account.");
-        } else {
-            user.setRole(UserRole.valueOf(selectedRole));
-            model.addAttribute("successMessage", "Registration successful! You can now login to your account.");
+
+//    @RequestMapping(value = "/register", method = RequestMethod.POST)
+//    public String registerUser(@ModelAttribute("userCommand") UserCommand cmd, Model model) {
+//        try {
+//            User user = cmd.getUser();
+//            String selectedRole = cmd.getUser().getRole().name();
+//            if (userService.isEmailExists(user.getEmail())) {
+//                throw new DuplicateKeyException("Email already registered");
+//            }
+//
+//            // If the user is registering as a seller, set role to REQUESTEDSELLER
+//            if (UserRole.valueOf(selectedRole) == UserRole.SELLER) {
+//                user.setRole(UserRole.REQUESTEDSELLER);
+//                model.addAttribute("successMessage", "Registration successful! Please wait for admin approval to access your seller account.");
+//            } else {
+//                user.setRole(UserRole.valueOf(selectedRole));
+//                model.addAttribute("successMessage", "Registration successful! You can now login to your account.");
+//            }
+//
+//            // Register user
+//            userService.register(user);
+//
+//            // Send registration email
+//            emailService.sendRegistrationEmail(user);
+//
+//            return "redirect:index?act=reg";
+//
+//        } catch (DuplicateKeyException e) {
+//            model.addAttribute("err", "Email is already registered. Please select another email.");
+//            return "reg_form";
+//        }
+//    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String registerUser(@ModelAttribute("userCommand") UserCommand cmd, Model model) {
+        try {
+            User user = cmd.getUser();
+            String selectedRole = cmd.getUser().getRole().name();
+            if (userService.isEmailExists(user.getEmail())) {
+                throw new DuplicateKeyException("Email already registered");
+            }
+
+            // If the user is registering as a seller, set role to REQUESTEDSELLER
+            if (UserRole.valueOf(selectedRole) == UserRole.SELLER) {
+                user.setRole(UserRole.REQUESTEDSELLER);
+                model.addAttribute("successMessage", "Registration successful! Please wait for admin approval to access your seller account.");
+            } else {
+                user.setRole(UserRole.valueOf(selectedRole));
+                model.addAttribute("successMessage", "Registration successful! You can now login to your account.");
+            }
+
+            // Register user
+            userService.register(user);
+
+            // Send registration email
+            emailService.sendRegistrationEmail(user);
+
+            return "redirect:login?act=reg";
+
+        } catch (DuplicateKeyException e) {
+            model.addAttribute("err", "Email is already registered. Please select another email.");
+            return "reg_form";
         }
-
-        userService.register(user);
-        return "redirect:index?act=reg";
-
-    } catch (DuplicateKeyException e) {
-        model.addAttribute("err", "Email is already registered. Please select another email.");
-        return "reg_form";
     }
-}
-
 
 
     // Add this new method to handle the login page display
@@ -151,6 +204,8 @@ public String registerUser(@ModelAttribute("userCommand") UserCommand cmd, Model
 //        model.addAttribute("command", new LoginCommand());
 //        return "index";  // Your login page JSP
 //    }
+
+
 
     @RequestMapping(value = "/seller/profile")
     public String sellerProfile(Model model, HttpSession session) {

@@ -6,6 +6,9 @@
 <!DOCTYPE html>
 <html data-theme="light">
     <head>
+
+        <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Online Home Decor</title>
@@ -116,7 +119,7 @@
             }
 
             .hero-section {
-                margin-top: 76px;
+                margin-top: 35px;
                 padding: 2rem;
                 background: linear-gradient(45deg,
                     rgba(124, 58, 237, 0.1) 0%,
@@ -427,7 +430,53 @@
             color: green;
             text-align: center;
         }
+
+        .search-container {
+            flex-grow: 1;
+            margin: 0 1rem;
+        }
+
+        .search-form {
+            display: flex;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .search-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .search-button .material-icons {
+            color: white;
+        }
+
+        @media (max-width: 640px) {
+            .search-container {
+                display: none; /* Optional: hide search on very small screens */
+            }
+        }
+
         </style>
+
     </head>
     <body>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
@@ -442,6 +491,45 @@
                     <span class="material-icons">home</span>
                     Online Home Decor
                 </a>
+
+              <!-- Add this inside the header-content div, before the nav-buttons -->
+                               <div class="search-container">
+                 <!---   <form action="<s:url value="products/search"/>" method="get" class="search-form">
+                        <div class="input-group">
+                            <input
+                                type="search"
+                                name="query"
+                                class="form-control search-input"
+                                placeholder="Search products..."
+                                aria-label="Search products"
+                            >
+                            <button type="submit" class="btn btn-primary search-button">
+                                <span class="material-icons">search</span>
+                            </button>
+                        </div>
+                    </form>---!>
+
+
+                    <form action="<s:url value="/"/>" method="get" class="search-form" id="searchForm">
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                name="search"
+                                value="${searchTerm}"
+                                class="form-control search-input"
+                                placeholder="Search products..."
+                                aria-label="Search products"
+                                id="productSearchInput"
+                            >
+                            <button type="submit" class="btn btn-primary search-button">
+                                <span class="material-icons">search</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+
+
                 <nav class="nav-buttons">
                     <a href="<s:url value="/help"/>" class="button help-btn">
                                             <span class="material-icons">help</span>
@@ -482,6 +570,7 @@
                 </div>
             </section>
 
+
             <section class="product-section">
                 <div class="row">
                     <c:forEach items="${products}" var="product">
@@ -509,7 +598,7 @@
                                     <div class="product-price">₹${product.price}</div>
                                     <a href="<s:url value="/login"/>" class="btn btn-primary button login-btn">
                                         <span class="material-icons">login</span>
-                                                   Buy Now
+                                        Buy Now
                                     </a>
                                 </div>
                             </div>
@@ -584,6 +673,9 @@
                 const icon = document.querySelector('.theme-toggle .material-icons');
                 icon.textContent = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
             });
+
+
+
         </script>
     </body>
 </html>

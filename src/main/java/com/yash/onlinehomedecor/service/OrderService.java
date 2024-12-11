@@ -9,4 +9,6 @@ public interface OrderService {
     List<Order> getOrdersBySellerId(int sellerId);
     void updateOrderStatus(int orderId, String status);
     Order getOrderById(int orderId);
+    List<Order> findByProductId(Integer productId);
+    public List<Order> findAll();
 }

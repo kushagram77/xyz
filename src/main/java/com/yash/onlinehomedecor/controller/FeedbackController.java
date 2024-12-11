@@ -44,7 +44,7 @@ public class FeedbackController {
         return "help";
     }
 
-    @RequestMapping("/feedback/list")
+    @RequestMapping("admin/feedback/list")
     public String feedbackList(Model m) {
         List<Feedback> feedbackList = feedbackService.getAllFeedback();
         m.addAttribute("feedbackList", feedbackList);

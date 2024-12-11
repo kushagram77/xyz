@@ -7,6 +7,8 @@
         <title>User Dashboard </title>
          <s:url var="url_css" value="/static/css/style.css"/>
         <link href="${url_css}" rel="stylesheet" type="text/css"/>
+        <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
     </head>
     <s:url var="url_bg" value="/static/images/bg.jpg"/>
     <body background="${url_bg}">

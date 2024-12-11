@@ -9,6 +9,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Seller Products - Online Home Decor</title>
+        <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
         <style>
@@ -236,6 +238,18 @@
                     margin: 0 16px;
                 }
             }
+
+           .header .nav-btn {
+                                           color: white;
+                                           text-decoration: none;
+                                           display: flex;
+                                           align-items: center;
+                                           gap: 0.5rem;
+                                           padding: 0.5rem 1rem;
+                                           border-radius: 8px;
+                                           transition: background-color 0.3s;
+                                           font-weight: 500;
+                                       }
         </style>
     </head>
     <body>
@@ -245,9 +259,15 @@
                 My Products
             </h1>
             <div class="header-actions">
+
+                <a href="/OHDSpring/admin/dashboard" class="nav-btn">
+                                                            <span class="material-icons">dashboard</span>
+                                                            <span>Dashboard</span>
+                                                        </a>
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                     <span class="material-icons">dark_mode</span>
                 </button>
+
                 <a href="<s:url value='/products/add'/>" class="add-product-btn">
                     <span class="material-icons">add</span>
                     Add Product
@@ -264,6 +284,11 @@
                             <h2 class="product-title">${product.name}</h2>
                             <p class="product-price">₹${product.price}</p>
                             <p class="product-description">${product.description}</p>
+                            <div class="seller-info" style="margin-bottom: 12px; color: var(--text-secondary);">
+                                            <p><strong>Seller ID:</strong> ${product.seller_id}</p>
+                                            <p><strong>Seller Name:</strong> Ananya</p>
+
+                                        </div>
                             <div class="product-actions">
                                 <a href="<s:url value='/admin/products/${product.id}/edit'/>" class="edit-btn">
                                     <span class="material-icons">edit</span>

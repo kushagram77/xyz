@@ -8,6 +8,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Online Home Decor</title>
+        <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
         <style>
@@ -117,6 +119,27 @@
                 z-index: 1;
                 border: 1px solid var(--border);
             }
+
+            .notification {
+                            position: fixed;
+                            top: 96px;
+                            right: 20px;
+                            padding: 15px 25px;
+                            border-radius: 12px;
+                            color: white;
+                            display: none;
+                            z-index: 10000;
+                            background: var(--success);
+                            box-shadow: 0 4px 12px var(--shadow);
+                            text-align: center;
+                        }
+                         .successMsg {
+                                    position: fixed;
+                                    padding-top: 40px;
+                                    color: green;
+                                    text-align: center;
+                                }
+
 
             .header {
                 background: var(--header-bg);
@@ -412,8 +435,36 @@
             </main>
 
             <footer class="footer">
-                © [2024-2025] Copyrights by Yash TECHNOLOGIES | All Rights Reserved
-            </footer>
+                        <div class="footer-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="footer-section text-center">
+                                        <h2 class="footer-title" style="color: var(--text-primary);">Connect With Us</h2>
+                                        <div class="social-links justify-content-center">
+                                            <a href="#" class="social-link" aria-label="Instagram">
+                                                <span class="material-icons">photo_camera</span>
+                                            </a>
+                                            <a href="linkedin.com/in/kushagra-mishra-910378231/" class="social-link" aria-label="LinkedIn">
+                                                <span class="material-icons">work</span>
+                                            </a>
+                                            <a href="#" class="social-link" aria-label="Facebook">
+                                                <span class="material-icons">facebook</span>
+                                            </a>
+                                            <a href="mailto:kushagram77@gmail.com" class="social-link" aria-label="Email">
+                                                <span class="material-icons">email</span>
+                                            </a>
+                                            <a href="tel:+919302404656" class="social-link" aria-label="Contact">
+                                                <span class="material-icons">phone</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer-bottom text-center">
+                            <p>&copy; 2024 Online Home Decor. All rights reserved.</p>
+                        </div>
+                    </footer>
         </div>
 
         <script>

@@ -55,14 +55,20 @@ public class CartServiceImpl implements CartService {
         cartDAO.addItemToCart(item);
     }
 
-    @Override
-    @Transactional
-    public void updateCartItemQuantity(Integer cartItemId, Integer quantity) {
+//    @Override
+//    @Transactional
+//    public void updateCartItemQuantity(Integer cartItemId, Integer quantity) {
+//        CartItem item = cartDAO.getCartItem(cartItemId);
+//        if (item != null) {
+//            item.setQuantity(quantity);
+//            cartDAO.updateCartItem(item);
+//        }
+//    }
+
+    public void updateCartItemQuantity(Integer cartItemId, int quantity) {
         CartItem item = cartDAO.getCartItem(cartItemId);
-        if (item != null) {
-            item.setQuantity(quantity);
-            cartDAO.updateCartItem(item);
-        }
+        item.setQuantity(quantity);
+        cartDAO.updateCartItem(cartItemId, quantity);
     }
 
     @Override
@@ -91,7 +97,7 @@ public class CartServiceImpl implements CartService {
         // Get all active cart items for the user
         List<CartItem> cartItems = cartDAO.getActiveCartItems(userId);
         System.out.println("IN createOrdersFromCart Service layer");
-        Integer orderId=0;
+        Integer orderId=17;
         // Create an order for each cart item
         for (CartItem item : cartItems) {
             System.out.println("kushagraaaa");

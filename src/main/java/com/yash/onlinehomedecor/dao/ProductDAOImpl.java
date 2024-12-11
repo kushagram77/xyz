@@ -14,10 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class ProductDAOImpl extends BaseDAO implements ProductDAO {
@@ -52,6 +49,14 @@ public class ProductDAOImpl extends BaseDAO implements ProductDAO {
         }
         return getJdbcTemplate().query(sql, new ProductRowMapper(), sellerId);
     }
+
+    @Override
+    public List<Product> searchProductsByNameOrDescription(String query) {
+        String sql = "SELECT * FROM products WHERE LOWER(name) LIKE ? OR LOWER(description) LIKE ?";
+        String searchPattern = "%" + query.toLowerCase() + "%";
+        return getJdbcTemplate().query(sql, new ProductRowMapper(), searchPattern, searchPattern);
+    }
+
     @Override
     public List<Product> getAllProducts() {
         String sql = "SELECT * FROM products";

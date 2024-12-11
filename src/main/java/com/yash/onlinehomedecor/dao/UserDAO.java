@@ -16,6 +16,8 @@ public interface UserDAO {
     public List<User> findAll(Integer id);
     public List<User> findAll();
     public List<User> findByProperty(String propName,Object propValue);
+    public boolean isEmailExists(String email);
+    User findByName(String name);
     //String getShippingAddress(int userId);
 
 

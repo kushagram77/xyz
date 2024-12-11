@@ -46,12 +46,12 @@ public class PdfBillGenerationController {
                     .setFontSize(20)
                     .setBold());
 
-            document.add(new Paragraph("Invoice")
+            document.add(new Paragraph("Payment receipt")
                     .setTextAlignment(TextAlignment.CENTER)
                     .setFontSize(16));
 
             // Invoice Details
-            document.add(new Paragraph("Invoice Number: " + order.getId())
+            document.add(new Paragraph("Payment Number: " + order.getId())
                     .setTextAlignment(TextAlignment.LEFT));
 
             // Format order date
@@ -94,7 +94,7 @@ public class PdfBillGenerationController {
                     .setBold());
 
             // Order Status
-            document.add(new Paragraph("Order Status: " + order.getStatus())
+            document.add(new Paragraph("Payment Status : Payment Received")
                     .setTextAlignment(TextAlignment.LEFT));
 
             document.close();

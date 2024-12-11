@@ -9,6 +9,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Seller Products - Online Home Decor</title>
+        <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
         <style>
@@ -251,13 +253,14 @@
                             <span class="material-icons">dashboard</span>
                             Back to Dashboard
                 </a>
+                <a href="<s:url value='/products/add'/>" class="add-product-btn">
+                                    <span class="material-icons">add</span>
+                                    Add Product
+                                </a>
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                     <span class="material-icons">dark_mode</span>
                 </button>
-                <a href="<s:url value='/products/add'/>" class="add-product-btn">
-                    <span class="material-icons">add</span>
-                    Add Product
-                </a>
+
             </div>
         </header>
 

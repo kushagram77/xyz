@@ -9,6 +9,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Help & Support - Online Home Decor</title>
+        <link rel="icon" type="image/svg+xml" href="https://img.icons8.com/cute-clipart/64/home.png">
+
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -395,7 +397,7 @@
 
             <!-- Feedback Form Section -->
             <div class="feedback-form">
-                <h2 class="mb-4">Send us your feedback</h2>
+                <h2 class="mb-4">Send us your Queries</h2>
                 <form action="<s:url value="/submit-feedback"/>" method="POST">
                     <div class="form-group">
                         <label class="form-label">Name</label>
@@ -422,7 +424,7 @@
                     </div>
                     <button type="submit" class="submit-btn">
                         <span class="material-icons">send</span>
-                        Submit Feedback
+                        Submit
                     </button>
                 </form>
             </div>
