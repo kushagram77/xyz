@@ -99,6 +99,27 @@ public class ProductReview {
         this.status = status;
     }
 
+
+    private String userEmail;
+    private String productName;
+
+    // Add getters and setters
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
     // toString method for debugging
     @Override
     public String toString() {

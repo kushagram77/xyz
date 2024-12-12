@@ -49,6 +49,7 @@
             }
 
             * {
+
                 margin: 0;
                 padding: 0;
                 box-sizing: border-box;
@@ -64,9 +65,9 @@
             }
 
             .theme-toggle {
-                position: fixed;
+                position: absolute;
                 top: 20px;
-                right: 20px;
+                right: 28px;
                 background: var(--card-bg);
                 border: 1px solid var(--border);
                 border-radius: 50%;
@@ -81,23 +82,70 @@
                 transition: transform 0.3s ease;
             }
 
-            .header {
-                background: var(--header-bg);
-                padding: 28px;
-                text-align: center;
-                position: relative;
-                margin-bottom: 40px;
-            }
+             .header {
+                   background: var(--header-bg);
+                   padding: 28px;
+                   display: flex;
+                   align-items: center;
+                   justify-content: space-between;
+                   margin-bottom: 40px;
+                   position: relative;
+               }
 
-            .header h1 {
-                color: white;
-                font-size: 24px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 12px;
-                font-family: 'Poppins', sans-serif;
-            }
+               .header-content {
+                   display: flex;
+                   align-items: center;
+                   justify-content: center;
+                   flex-grow: 1;
+               }
+
+               .header h1 {
+                   color: white;
+                   font-size: 24px;
+                   display: flex;
+                   align-items: center;
+                   gap: 12px;
+                   font-family: 'Poppins', sans-serif;
+                   margin: 0;
+               }
+
+               .header .nav-btn {
+                   color: white;
+                   text-decoration: none;
+                   display: flex;
+                   align-items: center;
+                   gap: 0.5rem;
+                   padding: 0.5rem 1rem;
+                   border-radius: 8px;
+                   transition: background-color 0.3s;
+                   font-weight: 500;
+                   position: absolute;
+                   right: 20px;
+                   top: 50%;
+                   transform: translateY(-50%);
+               }
+
+               .header .nav-btn:hover {
+                   background-color: rgba(255, 255, 255, 0.2);
+               }
+
+               @media (max-width: 768px) {
+                   .header {
+                       flex-direction: column;
+                       padding: 20px;
+                   }
+
+                   .header-content {
+                       margin-bottom: 15px;
+                   }
+
+                   .header .nav-btn {
+                       position: static;
+                       transform: none;
+                       margin-top: 10px;
+                       align-self: center;
+                   }
+               }
 
             .main-container {
                 max-width: 1200px;
@@ -256,6 +304,7 @@
                             border-radius: 8px;
                             transition: background-color 0.3s;
                             font-weight: 500;
+                            right:100px;
                         }
 
                         .header .nav-btn:hover {
@@ -280,62 +329,72 @@
         </button>
 
 
-        <header class="header">
-            <h1>
-                <span class="material-icons">shopping_bag</span>
-                Seller Orders
-            </h1>
-            <a href="/OHDSpring/admin/dashboard" class="nav-btn">
-                                                                                <span class="material-icons">dashboard</span>
-                                                                                <span>Dashboard</span>
-                                                                            </a>
-
-        </header>
+       <header class="header">
+           <div class="header-content">
+               <h1>
+                   <span class="material-icons">shopping_bag</span>
+                   Seller Orders
+               </h1>
+           </div>
+           <a href="/OHDSpring/xyz" class="nav-btn">
+               <span class="material-icons">dashboard</span>
+               <span>Dashboard</span>
+           </a>
+       </header>
 
         <div class="main-container">
-            <c:if test="${not empty message}">
-                <div class="alert ${messageType}">
-                    <span class="material-icons">
-                        ${messageType == 'success' ? 'check_circle' : 'error'}
-                    </span>
-                    ${message}
-                </div>
-            </c:if>
+                    <c:if test="${not empty message}">
+                        <div class="alert ${messageType}">
+                            <span class="material-icons">
+                                ${messageType == 'success' ? 'check_circle' : 'error'}
+                            </span>
+                            ${message}
+                        </div>
+                    </c:if>
 
-            <table class="orders-table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer Name</th>
-                        <th>Order Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="order" items="${orders}">
-                        <tr>
-                            <td>${order.id}</td>
-                            <td>${order.customerName}</td>
-                            <td>${order.status}</td>
-                            <td>
-                                <form action="<c:url value='/seller/orders/${order.id}/status'/>" method="post" class="status-form">
-                                    <select name="status" class="status-select">
-                                        <option value="Pending" <c:if test="${order.status == 'Pending'}">selected</c:if>>Pending</option>
-                                        <option value="Shipped" <c:if test="${order.status == 'Shipped'}">selected</c:if>>Shipped</option>
-                                        <option value="Delivered" <c:if test="${order.status == 'Delivered'}">selected</c:if>>Delivered</option>
-                                        <option value="Cancelled" <c:if test="${order.status == 'Cancelled'}">selected</c:if>>Cancelled</option>
-                                    </select>
-                                    <button type="submit" class="update-btn">
-                                        <span class="material-icons">update</span>
-                                        Update Status
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product Name</th>
+                                <th>Customer Name</th>
+                                <th>Shipping Address</th>
+                                <th>Order Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="order" items="${orders}">
+                                <tr>
+                                    <td>${order.id}</td>
+                                    <td>${order.productName}</td>
+                                    <td>${order.customerName}</td>
+                                    <td>
+                                        <div class="shipping-address">
+                                            ${order.shippingAddress}
+                                        </div>
+                                    </td>
+                                    <td>${order.status}</td>
+                                    <td>
+                                        <form action="<c:url value='/seller/orders/${order.id}/status'/>" method="post" class="status-form">
+                                            <select name="status" class="status-select">
+                                                <option value="Pending" <c:if test="${order.status == 'Pending'}">selected</c:if>>Pending</option>
+                                                <option value="Shipped" <c:if test="${order.status == 'Shipped'}">selected</c:if>>Shipped</option>
+                                                <option value="Delivered" <c:if test="${order.status == 'Delivered'}">selected</c:if>>Delivered</option>
+                                                <option value="Cancelled" <c:if test="${order.status == 'Cancelled'}">selected</c:if>>Cancelled</option>
+                                            </select>
+                                            <button type="submit" class="update-btn">
+                                                <span class="material-icons">update</span>
+                                                Update Status
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+
 
         <footer class="footer">
             © [2024-2025] Copyrights by Yash TECHNOLOGIES | All Rights Reserved

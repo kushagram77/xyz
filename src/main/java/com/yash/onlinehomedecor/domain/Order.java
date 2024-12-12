@@ -17,6 +17,8 @@ public class Order {
     private String shippingAddress;
     private String customerName;
 
+
+
     // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

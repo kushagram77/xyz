@@ -27,10 +27,7 @@ public class CartController {
     public String viewCart(HttpSession session, Model model) {
         Integer userId = (Integer) session.getAttribute("userId");
         Cart cart = cartService.getCart(userId);
-        System.out.println(cart.getId());
-        for(CartItem i: cart.getCartItems()){
-            System.out.println(i);
-        }
+
 
         // Add cart items to the model for rendering in JSP
         model.addAttribute("cartItems", cart.getCartItems());

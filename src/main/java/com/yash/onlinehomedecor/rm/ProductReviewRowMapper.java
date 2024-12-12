@@ -16,6 +16,8 @@ public class ProductReviewRowMapper implements RowMapper<ProductReview> {
         review.setProductId(rs.getInt("product_id"));
         review.setUserId(rs.getInt("user_id"));
         review.setRating(rs.getInt("rating"));
+      //  review.setUserEmail(rs.getString("user_email"));
+//      review.setProductName(rs.getString("product_name"));
 
         // Handle potential null review text
         String reviewText = rs.getString("review_text");

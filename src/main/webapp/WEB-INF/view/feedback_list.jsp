@@ -345,7 +345,7 @@
             <header class="header">
                 <h1>
                     <span class="material-icons">feedback</span>
-                    Feedback List
+                    Query List
                     <a href="<s:url value="/admin/dashboard"/>" class="home-link">
                         <span class="material-icons">home</span>
                         Dashboard
@@ -355,7 +355,7 @@
 
             <main class="content">
                 <div class="feedback-header">
-                    <h2 class="welcome-back">Customer Feedback List</h2>
+                    <h2 class="welcome-back">Customer Queries List</h2>
 
                 </div>
 

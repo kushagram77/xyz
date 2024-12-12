@@ -427,7 +427,7 @@
 
                             <div class="quantity-controls">
                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
-                                <input type="number" class="quantity-input" value="${item.quantity}"
+                                <input type="number" class="quantity-input" value="${item.quantity}" id="display-input-quantity-${item.id}"
                                        min="1" onchange="updateQuantity(${item.id}, this.value)">
                               <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
                             </div>
@@ -509,7 +509,8 @@
             console.log("Updating quantity for cart item:", cartItemId);
             console.log("Change value:", change);
 
-            let input = document.querySelector(`[data-item-id="${cartItemId}"] .quantity-input`);
+            const id = "display-input-quantity-" + cartItemId;
+            let input = document.getElementById(id);
 
             if (!input) {
                 console.error("Could not find quantity input for cart item:", cartItemId);

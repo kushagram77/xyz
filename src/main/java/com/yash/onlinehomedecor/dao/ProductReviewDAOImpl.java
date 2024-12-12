@@ -137,4 +137,26 @@ public class ProductReviewDAOImpl extends BaseDAO implements ProductReviewDAO {
 
 
     }
+
+//    @Override
+//    public List<ProductReview> getAllReviews() {
+//        String sql = "SELECT pr.*, u.email AS user_email, p.name AS product_name " +
+//                "FROM product_reviews pr " +
+//                "JOIN user u ON pr.user_id = u.id " +
+//                "JOIN products p ON pr.product_id = p.id";
+//
+//        try {
+////            return getJdbcTemplate().query(sql, (rs, rowNum) -> {
+////                ProductReview review = new ProductReviewRowMapper().mapRow(rs, rowNum);
+////                // Add additional fields
+////                review.setUserEmail(rs.getString("user_email"));
+////                review.setProductName(rs.getString("product_name"));
+////                return review;
+////            });
+//            return getJdbcTemplate().query(sql, new ProductReviewRowMapper());
+//        } catch (Exception e) {
+//            // Log the exception
+//            return Collections.emptyList();
+//        }
+//    }
 }

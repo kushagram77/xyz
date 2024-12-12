@@ -312,11 +312,11 @@
             </div>
 
             <div class="dashboard-card">
-                <h5>Manage Feedback</h5>
-                <p>View and manage customer feedback</p>
+                <h5>Manage Queries</h5>
+                <p>View and manage customer queries</p>
                 <a href="feedback/list" class="btn">
                     <span class="material-icons">feedback</span>
-                    View Feedback
+                    View Queries
                 </a>
             </div>
 
